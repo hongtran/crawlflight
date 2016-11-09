@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# crawlflight
-=======
 # iFlight website
 
 **iFlight** is the website for booking airline ticket service
