@@ -1,0 +1,193 @@
+#about {
+  .header {
+    background: $brand-primary;
+    padding: 1.5em 0;
+    color: white;
+    text-transform: uppercase;
+  }
+
+  .desc-header {
+    padding: 1.5em 0;
+    text-transform: uppercase;
+  }
+
+  .desc-body {
+    margin: 2em 1em 3.5em;
+    i {
+      float: left;
+      color: $brand-primary;
+    }
+    .content {
+      padding-left: 2em;
+
+      h3 {
+        color: $brand-primary;
+      }
+    }
+  }
+
+  h4 {
+    margin-bottom: 0;
+  }
+
+  .team-members {
+    background-color: #f7f7f7;
+    padding: 3em 0;
+
+    .social-icons {
+      margin-top: .5em;
+      margin-bottom: .5em;
+      font-size: 1.3em;
+
+      i.fa {
+        margin: 0 .6em;
+      }
+    }
+
+    .personal-message {
+      font-size: .9em;
+    }
+  }
+
+  .vision {
+    background-image: image-url('about/sky-cloud.jpeg');
+    height: 700px;
+    background-repeat: no-repeat;
+    background-position: 30% 85%;
+    padding-top: 10em;
+    text-align: center;
+
+    h4 {
+      font-size: 2.3em;
+      line-height: 1.5em;
+      color: $brand-primary;
+    }
+  }
+
+  .team-desc {
+    .description {
+      padding-left: 3em;
+    }
+    .image {
+    }
+    i {
+      font-size: 4em;
+    }
+    h4 {
+      text-transform: uppercase;
+      margin-bottom: 1em;
+    }
+  }
+
+  .mission-desc {
+    .description {
+      height: 700px;
+      padding-left: 3em;
+    }
+    .image {
+      height: 700px;
+      overflow: hidden;
+      img {
+        left: -719px;
+        top: -358px;
+        position: relative;
+      }
+    }
+  }
+
+  @media (max-width: 767px) {
+    .team-desc {
+      div.image {
+        display: none;
+      }
+    }
+
+    #team-moments{
+      display: none;
+    }
+  }
+
+  .customer-target {
+    background-color: #3d474d;
+    color: white;
+
+    .title-icon {
+      padding-top: 4em;
+      margin-bottom: 2em;
+    }
+
+    .title-head {
+      text-transform: uppercase;
+    }
+
+    .title-content {
+      font-size: 1.5em;
+      letter-spacing: 1px;
+      margin-top: 2em;
+    }
+
+    .info-container {
+      display: table;
+      height: 239px;
+    }
+
+    .info-icon {
+      display: table-cell;
+      padding-bottom: 30px;
+      padding-top: 30px;
+      vertical-align: middle;
+    }
+
+    .info-content {
+      display: table-cell;
+      vertical-align: middle;
+      padding: 30px;
+
+      p {
+        margin-top: 1em;
+      }
+    }
+  }
+
+  .agent-target {
+    background-color: white;
+    color: black;
+
+    .title-icon {
+      padding-top: 4em;
+      margin-bottom: 2em;
+    }
+
+    .title-head {
+      text-transform: uppercase;
+    }
+
+    .title-content {
+      font-size: 1.5em;
+      letter-spacing: 1px;
+      margin-top: 2em;
+    }
+
+    .info-container {
+      display: table;
+      height: 242px;
+    }
+
+    .info-icon {
+      display: table-cell;
+      padding-bottom: 30px;
+      padding-top: 30px;
+      vertical-align: middle;
+    }
+
+    .info-content {
+      display: table-cell;
+      vertical-align: middle;
+      padding: 30px;
+
+      p {
+        margin-top: 1em;
+      }
+    }
+  }
+}

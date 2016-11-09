@@ -1,0 +1,23 @@
+I"x(function() {
+  window.App || (window.App = {});
+
+  App.init = function() {
+    $("a, span, i, div").tooltip();
+    $('[data-toggle="tooltip"]').tooltip();
+    return $('.dropdown').hover((function() {
+      $('.dropdown-menu', this).stop(true, true).fadeIn('fast');
+      $(this).toggleClass('open');
+      $('b', this).toggleClass('caret caret-up');
+    }), function() {
+      $('.dropdown-menu', this).stop(true, true).fadeOut('fast');
+      $(this).toggleClass('open');
+      $('b', this).toggleClass('caret caret-up');
+    });
+  };
+
+  $(document).on("turbolinks:load", function() {
+    return App.init();
+  });
+
+}).call(this);
+:ET

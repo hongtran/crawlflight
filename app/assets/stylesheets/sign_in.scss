@@ -1,0 +1,19 @@
+.sign-in, .sign-in {
+  background-image: image-url('sign-up-bg.jpg');
+  height: 100%;
+  min-height: 540px;
+  h4 {
+    color: $brand-primary;
+    margin-bottom: 1.4em;
+  }
+
+  .fb-btn {
+    background-color: #3B5998;
+    color: white;
+  }
+}
+
+.form {
+  margin-top: 5em;
+  margin-bottom: 5em;
+}

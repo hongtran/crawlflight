@@ -1,0 +1,25 @@
+I"%(function() {
+  $(document).on("turbolinks:load", function() {
+    var getWordCount;
+    getWordCount = function(string) {
+      var words;
+      words = string.split(' ');
+      words = words.filter(function(words) {
+        return words.length > 0;
+      }).length;
+      return words;
+    };
+    $.validator.addMethod('wordCount', (function(value, element, params) {
+      var count;
+      count = getWordCount(value);
+      if (count >= params[0]) {
+        return true;
+      }
+    }), $.validator.format('A minimum of {0} words is required here.'));
+    return $.validator.addMethod('vietnameseDate', (function(value, element) {
+      return value.match(/^\d\d?\/\d\d?\/\d\d\d\d$/);
+    }), $.validator.format('Please enter a date in the format DD/MM/YYYY. E.g: 15/09/1991'));
+  });
+
+}).call(this);
+:ET

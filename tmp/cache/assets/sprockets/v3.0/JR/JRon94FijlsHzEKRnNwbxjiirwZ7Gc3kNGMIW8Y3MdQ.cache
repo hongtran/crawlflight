@@ -1,0 +1,96 @@
+I"‘(function() {
+  $(document).on('turbolinks:load', function() {
+    var cal_total_passengers, getRoutes, ori_id, routes, updateDestinationAirport;
+    routes = {};
+    ori_id = '1';
+    $('#ori_airport_id').change(function() {
+      if ($("#ori_airport_id option[value='']").length > 0) {
+        $("#ori_airport_id option[value='']").remove();
+      }
+      $('button[type="submit"]').prop('disabled', false);
+      ori_id = $('#ori_airport_id option:selected').val();
+      return updateDestinationAirport();
+    });
+    getRoutes = function() {
+      return $.ajax({
+        type: 'GET',
+        contentType: 'application/json; charset=utf-8',
+        url: 'routes/destination',
+        data: '',
+        dataType: 'json',
+        success: function(result) {
+          routes = result;
+        },
+        error: function() {
+          console.error('error get destination');
+          return {};
+        }
+      });
+    };
+    getRoutes();
+    updateDestinationAirport = function() {
+      var i, len, route;
+      $('#des_airport_id').empty();
+      for (i = 0, len = routes.length; i < len; i++) {
+        route = routes[i];
+        if (route.ori_airport_id === parseInt(ori_id)) {
+          $('#des_airport_id').append($('<option>', {
+            value: route.des_airport_id,
+            text: route.des_airport.name_unsigned + ' (' + route.des_airport.code + ')'
+          }));
+        }
+      }
+    };
+    $('#date-itinerary .input-daterange').datepicker({
+      setDate: new Date(),
+      format: 'dd/mm/yyyy',
+      autoclose: true,
+      todayHighlight: true,
+      startDate: '0d',
+      orientation: 'bottom left'
+    });
+    $('#date-itinerary .input-daterange').data('datepicker').pickers[0].setDate(new Date());
+    $('.lbl_itinerary_type').click(function(e) {
+      if (e.currentTarget.htmlFor === 'itinerary_type_round_trip') {
+        $('#to_date').prop('disabled', false);
+      } else {
+        $('#to_date').prop('disabled', true);
+      }
+    });
+    $('input[name="adult_num"]').TouchSpin({
+      initval: 1,
+      min: 1,
+      max: 6,
+      step: 1
+    });
+    $('input[name="child_num"]').TouchSpin({
+      initval: 0,
+      min: 0,
+      max: 6,
+      step: 1
+    });
+    $('input[name="infant_num"]').TouchSpin({
+      initval: 0,
+      min: 0,
+      max: 6,
+      step: 1
+    });
+    $(document).on('click', '.searching-form-wrapper .dropdown-menu', function(e) {
+      e.stopPropagation();
+    });
+    $('input[name*="_num"]').on('change', function() {
+      var total_pax, txt_pax;
+      total_pax = cal_total_passengers();
+      txt_pax = ' Passenger';
+      if (total_pax > 1) {
+        txt_pax = txt_pax + 's';
+      }
+      return $('#passengers-dropdown-btn').text(total_pax + txt_pax);
+    });
+    return cal_total_passengers = function() {
+      return parseInt($('input[name="adult_num"]').val()) + parseInt($('input[name="child_num"]').val()) + parseInt($('input[name="infant_num"]').val());
+    };
+  });
+
+}).call(this);
+:ET

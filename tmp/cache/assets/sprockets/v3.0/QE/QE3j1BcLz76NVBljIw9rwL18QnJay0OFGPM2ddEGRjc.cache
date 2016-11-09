@@ -1,0 +1,20 @@
+I"É(function() {
+  $(document).on("turbolinks:load", function() {
+    return App.sort_by = function(field, reverse, primer) {
+      var key;
+      key = primer ? (function(x) {
+        return primer(x[field]);
+      }) : (function(x) {
+        return x[field];
+      });
+      reverse = !reverse ? 1 : -1;
+      return function(a, b) {
+        a = key(a);
+        b = key(b);
+        return reverse * ((a > b) - (b > a));
+      };
+    };
+  });
+
+}).call(this);
+:ET

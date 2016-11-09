@@ -1,0 +1,1842 @@
+  [1m[35m (255.5ms)[0m  [1m[35mDROP DATABASE IF EXISTS "iflight_test"[0m
+  [1m[35m (2444.0ms)[0m  [1m[35mCREATE DATABASE "iflight_test" ENCODING = 'unicode'[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[35mCREATE EXTENSION IF NOT EXISTS "plpgsql"[0m
+  [1m[35m (90.9ms)[0m  [1m[35mCREATE TABLE "airports" ("id" serial primary key, "code" character varying, "name" character varying, "name_unsigned" character varying, "short_name" character varying, "is_domestic" boolean, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (98.4ms)[0m  [1m[35mCREATE TABLE "flights" ("id" serial primary key, "order_id" integer, "category" character varying, "plane_category_id" integer, "time_depart" timestamp, "time_arrive" timestamp, "code_flight" character varying, "code_book" character varying, "price_web" decimal, "price_total" decimal, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (54.3ms)[0m  [1m[35mCREATE  INDEX  "index_flights_on_order_id" ON "flights" USING btree ("order_id")[0m
+  [1m[35m (51.8ms)[0m  [1m[35mCREATE  INDEX  "index_flights_on_plane_category_id" ON "flights" USING btree ("plane_category_id")[0m
+  [1m[35m (109.7ms)[0m  [1m[35mCREATE TABLE "orders" ("id" serial primary key, "order_number" character varying, "user_id" integer, "contact_name" character varying, "contact_phone" character varying, "contact_email" character varying, "contact_gender" character varying, "adult" integer, "child" integer, "infant" integer, "ori_airport_id" integer, "des_airport_id" integer, "status" character varying, "time_expired" timestamp, "price_total" decimal, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, "category" character varying)[0m
+  [1m[35m (53.6ms)[0m  [1m[35mCREATE  INDEX  "index_orders_on_user_id" ON "orders" USING btree ("user_id")[0m
+  [1m[35m (87.6ms)[0m  [1m[35mCREATE TABLE "passengers" ("id" serial primary key, "order_id" integer, "no" integer, "dob" timestamp, "category" character varying, "depart_lug_weight" integer, "return_lug_weight" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (51.9ms)[0m  [1m[35mCREATE  INDEX  "index_passengers_on_order_id" ON "passengers" USING btree ("order_id")[0m
+  [1m[35m (108.4ms)[0m  [1m[35mCREATE TABLE "plane_categories" ("id" serial primary key, "category" character varying, "name" character varying, "short_name" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (54.3ms)[0m  [1m[35mCREATE TABLE "routes" ("id" serial primary key, "ori_airport_id" integer, "des_airport_id" integer, "is_domestic" boolean, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (90.5ms)[0m  [1m[35mCREATE TABLE "users" ("id" serial primary key, "email" character varying DEFAULT '' NOT NULL, "encrypted_password" character varying DEFAULT '' NOT NULL, "reset_password_token" character varying, "reset_password_sent_at" timestamp, "remember_created_at" timestamp, "sign_in_count" integer DEFAULT 0 NOT NULL, "current_sign_in_at" timestamp, "last_sign_in_at" timestamp, "current_sign_in_ip" inet, "last_sign_in_ip" inet, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, "name" character varying, "phone" character varying, "gender" character varying, "is_admin" boolean, "is_registered" boolean)[0m
+  [1m[35m (51.4ms)[0m  [1m[35mCREATE UNIQUE INDEX  "index_users_on_email" ON "users" USING btree ("email")[0m
+  [1m[35m (40.9ms)[0m  [1m[35mCREATE UNIQUE INDEX  "index_users_on_reset_password_token" ON "users" USING btree ("reset_password_token")[0m
+  [1m[35m (9.9ms)[0m  [1m[35mALTER TABLE "flights" ADD CONSTRAINT "fk_rails_bb2ad672b0"
+FOREIGN KEY ("order_id")
+  REFERENCES "orders" ("id")
+[0m
+  [1m[35m (9.8ms)[0m  [1m[35mALTER TABLE "flights" ADD CONSTRAINT "fk_rails_60c3d16714"
+FOREIGN KEY ("plane_category_id")
+  REFERENCES "plane_categories" ("id")
+[0m
+  [1m[35m (10.1ms)[0m  [1m[35mALTER TABLE "orders" ADD CONSTRAINT "fk_rails_f868b47f6a"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+[0m
+  [1m[35m (10.0ms)[0m  [1m[35mALTER TABLE "passengers" ADD CONSTRAINT "fk_rails_acd2787b6f"
+FOREIGN KEY ("order_id")
+  REFERENCES "orders" ("id")
+[0m
+  [1m[35m (86.2ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying PRIMARY KEY)[0m
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT version FROM "schema_migrations"[0m
+  [1m[35m (10.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES ('20160807101553')[0m
+  [1m[35m (10.9ms)[0m  [1m[32mINSERT INTO schema_migrations (version) VALUES ('20160807075149'), ('20160807075125'), ('20160807075132'), ('20160807075038'), ('20160807075049'), ('20160807075144'), ('20160807053124');
+
+[0m
+  [1m[35m (82.3ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying PRIMARY KEY, "value" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.2ms)[0m  [1m[34mSELECT  "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", :environment], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "environment"], ["value", "test"], ["created_at", 2016-08-07 11:22:05 UTC], ["updated_at", 2016-08-07 11:22:05 UTC]]
+  [1m[35m (9.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.2ms)[0m  [1m[34mSELECT  "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", :environment], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1[0m  [["key", :environment]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1[0m  [["key", :environment]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1[0m  [["key", :environment]]
+  [1m[35m (1129.6ms)[0m  [1m[35mDROP DATABASE IF EXISTS "iflight_test"[0m
+  [1m[35m (710.8ms)[0m  [1m[35mCREATE DATABASE "iflight_test" ENCODING = 'unicode'[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[35mCREATE EXTENSION IF NOT EXISTS "plpgsql"[0m
+  [1m[35m (77.4ms)[0m  [1m[35mCREATE TABLE "airports" ("id" serial primary key, "code" character varying, "name" character varying, "name_unsigned" character varying, "short_name" character varying, "is_domestic" boolean, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (85.3ms)[0m  [1m[35mCREATE TABLE "flights" ("id" serial primary key, "order_id" integer, "category" character varying, "plane_category_id" integer, "time_depart" timestamp, "time_arrive" timestamp, "code_flight" character varying, "code_book" character varying, "price_web" decimal, "price_total" decimal, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (52.7ms)[0m  [1m[35mCREATE  INDEX  "index_flights_on_order_id" ON "flights" USING btree ("order_id")[0m
+  [1m[35m (51.9ms)[0m  [1m[35mCREATE  INDEX  "index_flights_on_plane_category_id" ON "flights" USING btree ("plane_category_id")[0m
+  [1m[35m (85.1ms)[0m  [1m[35mCREATE TABLE "orders" ("id" serial primary key, "order_number" character varying, "user_id" integer, "contact_name" character varying, "contact_phone" character varying, "contact_email" character varying, "contact_gender" character varying, "adult" integer, "child" integer, "infant" integer, "ori_airport_id" integer, "des_airport_id" integer, "status" character varying, "time_expired" timestamp, "price_total" decimal, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, "category" character varying)[0m
+  [1m[35m (53.1ms)[0m  [1m[35mCREATE  INDEX  "index_orders_on_user_id" ON "orders" USING btree ("user_id")[0m
+  [1m[35m (98.0ms)[0m  [1m[35mCREATE TABLE "passengers" ("id" serial primary key, "order_id" integer, "no" integer, "dob" timestamp, "category" character varying, "depart_lug_weight" integer, "return_lug_weight" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (52.1ms)[0m  [1m[35mCREATE  INDEX  "index_passengers_on_order_id" ON "passengers" USING btree ("order_id")[0m
+  [1m[35m (87.7ms)[0m  [1m[35mCREATE TABLE "plane_categories" ("id" serial primary key, "category" character varying, "name" character varying, "short_name" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (64.3ms)[0m  [1m[35mCREATE TABLE "routes" ("id" serial primary key, "ori_airport_id" integer, "des_airport_id" integer, "is_domestic" boolean, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (82.7ms)[0m  [1m[35mCREATE TABLE "users" ("id" serial primary key, "email" character varying DEFAULT '' NOT NULL, "encrypted_password" character varying DEFAULT '' NOT NULL, "reset_password_token" character varying, "reset_password_sent_at" timestamp, "remember_created_at" timestamp, "sign_in_count" integer DEFAULT 0 NOT NULL, "current_sign_in_at" timestamp, "last_sign_in_at" timestamp, "current_sign_in_ip" inet, "last_sign_in_ip" inet, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, "name" character varying, "phone" character varying, "gender" character varying, "is_admin" boolean, "is_registered" boolean)[0m
+  [1m[35m (53.5ms)[0m  [1m[35mCREATE UNIQUE INDEX  "index_users_on_email" ON "users" USING btree ("email")[0m
+  [1m[35m (42.4ms)[0m  [1m[35mCREATE UNIQUE INDEX  "index_users_on_reset_password_token" ON "users" USING btree ("reset_password_token")[0m
+  [1m[35m (10.1ms)[0m  [1m[35mALTER TABLE "flights" ADD CONSTRAINT "fk_rails_bb2ad672b0"
+FOREIGN KEY ("order_id")
+  REFERENCES "orders" ("id")
+[0m
+  [1m[35m (10.6ms)[0m  [1m[35mALTER TABLE "flights" ADD CONSTRAINT "fk_rails_60c3d16714"
+FOREIGN KEY ("plane_category_id")
+  REFERENCES "plane_categories" ("id")
+[0m
+  [1m[35m (10.2ms)[0m  [1m[35mALTER TABLE "orders" ADD CONSTRAINT "fk_rails_f868b47f6a"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+[0m
+  [1m[35m (9.2ms)[0m  [1m[35mALTER TABLE "passengers" ADD CONSTRAINT "fk_rails_acd2787b6f"
+FOREIGN KEY ("order_id")
+  REFERENCES "orders" ("id")
+[0m
+  [1m[35m (98.0ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying PRIMARY KEY)[0m
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT version FROM "schema_migrations"[0m
+  [1m[35m (9.0ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES ('20160807104023')[0m
+  [1m[35m (10.6ms)[0m  [1m[32mINSERT INTO schema_migrations (version) VALUES ('20160807075149'), ('20160807075125'), ('20160807075132'), ('20160807075038'), ('20160807075049'), ('20160807075144'), ('20160807053124'), ('20160807101553');
+
+[0m
+  [1m[35m (118.6ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying PRIMARY KEY, "value" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.3ms)[0m  [1m[34mSELECT  "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", :environment], ["LIMIT", 1]]
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "environment"], ["value", "test"], ["created_at", 2016-08-07 11:25:01 UTC], ["updated_at", 2016-08-07 11:25:01 UTC]]
+  [1m[35m (9.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.5ms)[0m  [1m[34mSELECT  "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", :environment], ["LIMIT", 1]]
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (12.2ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.5ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.5ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+Started GET "/users/sign_up" for 127.0.0.1 at 2016-08-09 19:52:07 +0700
+Processing by Devise::RegistrationsController#new as HTML
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (0.9ms)
+  Rendered devise/registrations/new.html.erb within layouts/application (21.4ms)
+  Rendered shared/_toast.html.erb (0.4ms)
+  Rendered shared/_header.html.erb (0.8ms)
+Completed 200 OK in 4298ms (Views: 4208.7ms | ActiveRecord: 53.4ms)
+Started POST "/users" for 127.0.0.1 at 2016-08-09 19:52:11 +0700
+Processing by Devise::RegistrationsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"name"=>"", "email"=>"abcd@example.com", "gender"=>"male", "phone"=>"", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}, "commit"=>"Sign up"}
+Unpermitted parameters: name, gender, phone
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists (25.2ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "abcd@example.com"], ["LIMIT", 1]]
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (0.8ms)
+  Rendered devise/registrations/new.html.erb within layouts/application (6.3ms)
+  Rendered shared/_toast.html.erb (0.3ms)
+  Rendered shared/_header.html.erb (0.8ms)
+Completed 200 OK in 143ms (Views: 11.9ms | ActiveRecord: 25.5ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+Started GET "/users/sign_up" for 127.0.0.1 at 2016-08-09 19:52:34 +0700
+Processing by Devise::RegistrationsController#new as HTML
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.0ms)
+  Rendered devise/registrations/new.html.erb within layouts/application (22.4ms)
+  Rendered shared/_toast.html.erb (0.5ms)
+  Rendered shared/_header.html.erb (0.9ms)
+Completed 200 OK in 275ms (Views: 235.9ms | ActiveRecord: 2.8ms)
+Started POST "/users" for 127.0.0.1 at 2016-08-09 19:52:35 +0700
+Processing by Devise::RegistrationsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"name"=>"", "email"=>"abcd@example.com", "gender"=>"male", "phone"=>"", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}, "commit"=>"Sign up"}
+Unpermitted parameters: name, gender, phone
+  [1m[35m (0.2ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists (0.6ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "abcd@example.com"], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.1ms)
+  Rendered devise/registrations/new.html.erb within layouts/application (7.2ms)
+  Rendered shared/_toast.html.erb (0.4ms)
+  Rendered shared/_header.html.erb (1.4ms)
+Completed 200 OK in 45ms (Views: 16.8ms | ActiveRecord: 0.9ms)
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+Started GET "/users/sign_up" for 127.0.0.1 at 2016-08-09 19:58:17 +0700
+Processing by Devise::RegistrationsController#new as HTML
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.1ms)
+  Rendered devise/registrations/new.html.erb within layouts/application (21.7ms)
+  Rendered shared/_toast.html.erb (0.4ms)
+  Rendered shared/_header.html.erb (0.9ms)
+Completed 200 OK in 276ms (Views: 238.1ms | ActiveRecord: 2.8ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+Started GET "/users/sign_up" for 127.0.0.1 at 2016-08-09 19:58:54 +0700
+Processing by Devise::RegistrationsController#new as HTML
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.0ms)
+  Rendered devise/registrations/new.html.erb within layouts/application (22.0ms)
+  Rendered shared/_toast.html.erb (0.5ms)
+  Rendered shared/_header.html.erb (0.9ms)
+Completed 200 OK in 279ms (Views: 239.3ms | ActiveRecord: 3.0ms)
+Started POST "/users" for 127.0.0.1 at 2016-08-09 19:58:55 +0700
+Processing by Devise::RegistrationsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"name"=>"abcd", "email"=>"abcd@example.com", "gender"=>"male", "phone"=>"", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}, "commit"=>"Sign up"}
+Unpermitted parameters: name, gender, phone
+  [1m[35m (0.2ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists (0.7ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "abcd@example.com"], ["LIMIT", 1]]
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.0ms)
+  Rendered devise/registrations/new.html.erb within layouts/application (6.9ms)
+  Rendered shared/_toast.html.erb (0.9ms)
+  Rendered shared/_header.html.erb (1.6ms)
+Completed 200 OK in 48ms (Views: 17.6ms | ActiveRecord: 1.1ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+Started GET "/users/sign_up" for 127.0.0.1 at 2016-08-09 19:59:43 +0700
+Processing by Devise::RegistrationsController#new as HTML
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (0.9ms)
+  Rendered devise/registrations/new.html.erb within layouts/application (23.0ms)
+  Rendered shared/_toast.html.erb (0.5ms)
+  Rendered shared/_header.html.erb (0.9ms)
+Completed 200 OK in 278ms (Views: 239.4ms | ActiveRecord: 3.1ms)
+Started POST "/users" for 127.0.0.1 at 2016-08-09 19:59:43 +0700
+Processing by Devise::RegistrationsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"name"=>"abcd", "email"=>"abcd@example.com", "gender"=>"male", "phone"=>"0988034925", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}, "commit"=>"Sign up"}
+Unpermitted parameters: name, gender, phone
+  [1m[35m (0.2ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists (0.7ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "abcd@example.com"], ["LIMIT", 1]]
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.1ms)
+  Rendered devise/registrations/new.html.erb within layouts/application (7.0ms)
+  Rendered shared/_toast.html.erb (1.0ms)
+  Rendered shared/_header.html.erb (2.2ms)
+Completed 200 OK in 48ms (Views: 17.6ms | ActiveRecord: 1.0ms)
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+Started GET "/users/sign_up" for 127.0.0.1 at 2016-08-09 20:01:17 +0700
+Processing by Devise::RegistrationsController#new as HTML
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (0.9ms)
+  Rendered devise/registrations/new.html.erb within layouts/application (21.7ms)
+  Rendered shared/_toast.html.erb (0.4ms)
+  Rendered shared/_header.html.erb (0.9ms)
+Completed 200 OK in 274ms (Views: 235.9ms | ActiveRecord: 3.1ms)
+Started POST "/users" for 127.0.0.1 at 2016-08-09 20:01:17 +0700
+Processing by Devise::RegistrationsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"name"=>"abcd", "email"=>"abcd@example.com", "gender"=>"male", "phone"=>"0988034925", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}, "commit"=>"Sign up"}
+Unpermitted parameters: name, gender, phone
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists (0.7ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "abcd@example.com"], ["LIMIT", 1]]
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (2.0ms)
+  Rendered devise/registrations/new.html.erb within layouts/application (8.1ms)
+  Rendered shared/_toast.html.erb (1.0ms)
+  Rendered shared/_header.html.erb (2.1ms)
+Completed 200 OK in 46ms (Views: 17.7ms | ActiveRecord: 1.0ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.5ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+Started GET "/users/sign_up" for 127.0.0.1 at 2016-08-09 20:03:46 +0700
+Processing by Devise::RegistrationsController#new as HTML
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (0.9ms)
+  Rendered devise/registrations/new.html.erb within layouts/application (21.8ms)
+  Rendered shared/_toast.html.erb (0.4ms)
+  Rendered shared/_header.html.erb (0.9ms)
+Completed 200 OK in 274ms (Views: 236.1ms | ActiveRecord: 2.7ms)
+Started POST "/users" for 127.0.0.1 at 2016-08-09 20:03:46 +0700
+Processing by Devise::RegistrationsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"name"=>"abcd", "email"=>"abcd@example.com", "gender"=>"male", "phone"=>"0988034925", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}, "commit"=>"Sign up"}
+Unpermitted parameters: name, gender, phone
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists (0.7ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "abcd@example.com"], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.1ms)
+  Rendered devise/registrations/new.html.erb within layouts/application (7.1ms)
+  Rendered shared/_toast.html.erb (1.1ms)
+  Rendered shared/_header.html.erb (2.2ms)
+Completed 200 OK in 46ms (Views: 17.5ms | ActiveRecord: 0.9ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+Started GET "/users/sign_up" for 127.0.0.1 at 2016-08-09 20:05:49 +0700
+Processing by Devise::RegistrationsController#new as HTML
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.0ms)
+  Rendered devise/registrations/new.html.erb within layouts/application (21.6ms)
+  Rendered shared/_toast.html.erb (0.4ms)
+  Rendered shared/_header.html.erb (0.9ms)
+Completed 200 OK in 273ms (Views: 234.1ms | ActiveRecord: 2.9ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+Started GET "/users/sign_up" for 127.0.0.1 at 2016-08-09 20:43:35 +0700
+Processing by Users::RegistrationsController#new as HTML
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (0.9ms)
+  Rendered devise/registrations/new.html.erb within layouts/application (21.5ms)
+  Rendered shared/_toast.html.erb (0.4ms)
+  Rendered shared/_header.html.erb (0.9ms)
+Completed 200 OK in 275ms (Views: 236.5ms | ActiveRecord: 2.7ms)
+Started POST "/users" for 127.0.0.1 at 2016-08-09 20:43:35 +0700
+Processing by Users::RegistrationsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"name"=>"abcdtesttest", "email"=>"abcd@example.com", "gender"=>"male", "phone"=>"0988034925", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}, "commit"=>"Sign up"}
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists (0.7ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "abcd@example.com"], ["LIMIT", 1]]
+  [1m[35mSQL (34.8ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at", "name", "phone", "gender") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["email", "abcd@example.com"], ["encrypted_password", "$2a$04$9WDDRWlwzMOOZ1FK22QTrOC5o6sa9aENdr5HeZe5mOVCXOpqTne12"], ["created_at", 2016-08-09 13:43:36 UTC], ["updated_at", 2016-08-09 13:43:36 UTC], ["name", "abcdtesttest"], ["phone", "0988034925"], ["gender", "male"]]
+  [1m[35m (0.4ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.2ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (14.1ms)[0m  [1m[33mUPDATE "users" SET "sign_in_count" = $1, "current_sign_in_at" = $2, "last_sign_in_at" = $3, "current_sign_in_ip" = $4, "last_sign_in_ip" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["sign_in_count", 1], ["current_sign_in_at", 2016-08-09 13:43:36 UTC], ["last_sign_in_at", 2016-08-09 13:43:36 UTC], ["current_sign_in_ip", "127.0.0.1/32"], ["last_sign_in_ip", "127.0.0.1/32"], ["updated_at", 2016-08-09 13:43:36 UTC], ["id", 1]]
+  [1m[35m (0.3ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/
+Completed 302 Found in 89ms (ActiveRecord: 50.5ms)
+Started GET "/" for 127.0.0.1 at 2016-08-09 20:43:36 +0700
+Processing by HomesController#index as HTML
+  Rendering homes/index.html.erb within layouts/application
+  Rendered homes/index.html.erb within layouts/application (0.4ms)
+  Rendered shared/_toast.html.erb (0.4ms)
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  Rendered shared/_header.html.erb (3.7ms)
+Completed 200 OK in 10ms (Views: 8.2ms | ActiveRecord: 0.5ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+Started GET "/users/sign_up" for 127.0.0.1 at 2016-08-09 21:08:28 +0700
+Processing by Users::RegistrationsController#new as HTML
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.0ms)
+  Rendered devise/registrations/new.html.erb within layouts/application (21.9ms)
+  Rendered shared/_toast.html.erb (0.4ms)
+  Rendered shared/_header.html.erb (1.3ms)
+Completed 200 OK in 305ms (Views: 266.2ms | ActiveRecord: 2.8ms)
+Started POST "/users" for 127.0.0.1 at 2016-08-09 21:08:28 +0700
+Processing by Users::RegistrationsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"name"=>"abcdtesttest", "email"=>"abcd@example.com", "gender"=>"male", "phone"=>"0988034925", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}, "commit"=>"Sign up"}
+  [1m[35m (0.2ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists (0.8ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "abcd@example.com"], ["LIMIT", 1]]
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at", "name", "phone", "gender") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["email", "abcd@example.com"], ["encrypted_password", "$2a$04$SJAXs9HQL.mIATuiCSumpeu93RaSB8MzhKwc/FriZA8j3u6zf4j52"], ["created_at", 2016-08-09 14:08:28 UTC], ["updated_at", 2016-08-09 14:08:28 UTC], ["name", "abcdtesttest"], ["phone", "0988034925"], ["gender", "male"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[33mUPDATE "users" SET "sign_in_count" = $1, "current_sign_in_at" = $2, "last_sign_in_at" = $3, "current_sign_in_ip" = $4, "last_sign_in_ip" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["sign_in_count", 1], ["current_sign_in_at", 2016-08-09 14:08:28 UTC], ["last_sign_in_at", 2016-08-09 14:08:28 UTC], ["current_sign_in_ip", "127.0.0.1/32"], ["last_sign_in_ip", "127.0.0.1/32"], ["updated_at", 2016-08-09 14:08:28 UTC], ["id", 2]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/
+Completed 302 Found in 31ms (ActiveRecord: 2.2ms)
+Started GET "/" for 127.0.0.1 at 2016-08-09 21:08:28 +0700
+Processing by HomesController#index as HTML
+  Rendering homes/index.html.erb within layouts/application
+  Rendered homes/index.html.erb within layouts/application (0.5ms)
+  Rendered shared/_toast.html.erb (0.4ms)
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  Rendered shared/_header.html.erb (2.7ms)
+Completed 200 OK in 9ms (Views: 7.4ms | ActiveRecord: 0.5ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+Started GET "/users/sign_up" for 127.0.0.1 at 2016-08-09 23:13:10 +0700
+Processing by Users::RegistrationsController#new as HTML
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (0.9ms)
+  Rendered devise/registrations/new.html.erb within layouts/application (21.6ms)
+  Rendered shared/_toast.html.erb (0.4ms)
+  Rendered shared/_header.html.erb (1.0ms)
+Completed 200 OK in 277ms (Views: 238.0ms | ActiveRecord: 2.5ms)
+Started POST "/users" for 127.0.0.1 at 2016-08-09 23:13:11 +0700
+Processing by Users::RegistrationsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"name"=>"abcdtesttest", "email"=>"abcd@example.com", "gender"=>"male", "phone"=>"0988034925", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}, "commit"=>"Sign up"}
+  [1m[35m (0.2ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists (0.7ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "abcd@example.com"], ["LIMIT", 1]]
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at", "name", "phone", "gender") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["email", "abcd@example.com"], ["encrypted_password", "$2a$04$8lLHtW98NC3bHJ6LJHX4muMGHQZbPRL8Cb2LZ18Yd0kkZM/DGc0Kq"], ["created_at", 2016-08-09 16:13:11 UTC], ["updated_at", 2016-08-09 16:13:11 UTC], ["name", "abcdtesttest"], ["phone", "0988034925"], ["gender", "male"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[33mUPDATE "users" SET "sign_in_count" = $1, "current_sign_in_at" = $2, "last_sign_in_at" = $3, "current_sign_in_ip" = $4, "last_sign_in_ip" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["sign_in_count", 1], ["current_sign_in_at", 2016-08-09 16:13:11 UTC], ["last_sign_in_at", 2016-08-09 16:13:11 UTC], ["current_sign_in_ip", "127.0.0.1/32"], ["last_sign_in_ip", "127.0.0.1/32"], ["updated_at", 2016-08-09 16:13:11 UTC], ["id", 3]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/
+Completed 302 Found in 33ms (ActiveRecord: 2.0ms)
+Started GET "/" for 127.0.0.1 at 2016-08-09 23:13:11 +0700
+Processing by HomesController#index as HTML
+  Rendering homes/index.html.erb within layouts/application
+  Rendered homes/index.html.erb within layouts/application (0.4ms)
+  Rendered shared/_toast.html.erb (0.4ms)
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 3], ["LIMIT", 1]]
+  Rendered shared/_header.html.erb (4.4ms)
+Completed 200 OK in 13ms (Views: 11.4ms | ActiveRecord: 0.4ms)
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists (0.2ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "alindeman@example.com"], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+Started GET "/users/sign_in" for 127.0.0.1 at 2016-08-09 23:13:11 +0700
+Processing by Devise::SessionsController#new as HTML
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (3.1ms)
+  Rendered devise/sessions/new.html.erb within layouts/application (10.8ms)
+  Rendered shared/_toast.html.erb (0.4ms)
+  Rendered shared/_header.html.erb (2.4ms)
+Completed 200 OK in 28ms (Views: 24.0ms | ActiveRecord: 0.0ms)
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+Started GET "/users/sign_up" for 127.0.0.1 at 2016-08-09 23:14:56 +0700
+Processing by Users::RegistrationsController#new as HTML
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (0.9ms)
+  Rendered devise/registrations/new.html.erb within layouts/application (22.1ms)
+  Rendered shared/_toast.html.erb (0.5ms)
+  Rendered shared/_header.html.erb (1.1ms)
+Completed 200 OK in 279ms (Views: 240.0ms | ActiveRecord: 2.8ms)
+Started POST "/users" for 127.0.0.1 at 2016-08-09 23:14:56 +0700
+Processing by Users::RegistrationsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"name"=>"abcdtesttest", "email"=>"abcd@example.com", "gender"=>"male", "phone"=>"0988034925", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}, "commit"=>"Sign up"}
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists (0.7ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "abcd@example.com"], ["LIMIT", 1]]
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at", "name", "phone", "gender") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["email", "abcd@example.com"], ["encrypted_password", "$2a$04$ctHYVYbEN/lx0N6R/dnydu4KAlRSC6Mw6e4/o7eQfX771mJYaxAYG"], ["created_at", 2016-08-09 16:14:56 UTC], ["updated_at", 2016-08-09 16:14:56 UTC], ["name", "abcdtesttest"], ["phone", "0988034925"], ["gender", "male"]]
+  [1m[35m (0.2ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[33mUPDATE "users" SET "sign_in_count" = $1, "current_sign_in_at" = $2, "last_sign_in_at" = $3, "current_sign_in_ip" = $4, "last_sign_in_ip" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["sign_in_count", 1], ["current_sign_in_at", 2016-08-09 16:14:56 UTC], ["last_sign_in_at", 2016-08-09 16:14:56 UTC], ["current_sign_in_ip", "127.0.0.1/32"], ["last_sign_in_ip", "127.0.0.1/32"], ["updated_at", 2016-08-09 16:14:56 UTC], ["id", 4]]
+  [1m[35m (0.2ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/
+Completed 302 Found in 34ms (ActiveRecord: 2.2ms)
+Started GET "/" for 127.0.0.1 at 2016-08-09 23:14:56 +0700
+Processing by HomesController#index as HTML
+  Rendering homes/index.html.erb within layouts/application
+  Rendered homes/index.html.erb within layouts/application (0.4ms)
+  Rendered shared/_toast.html.erb (0.4ms)
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 4], ["LIMIT", 1]]
+  Rendered shared/_header.html.erb (4.9ms)
+Completed 200 OK in 13ms (Views: 11.7ms | ActiveRecord: 0.5ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists (0.2ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "alindeman@example.com"], ["LIMIT", 1]]
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+Started GET "/users/sign_in" for 127.0.0.1 at 2016-08-09 23:14:56 +0700
+Processing by Devise::SessionsController#new as HTML
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (2.6ms)
+  Rendered devise/sessions/new.html.erb within layouts/application (11.0ms)
+  Rendered shared/_toast.html.erb (1.3ms)
+  Rendered shared/_header.html.erb (2.3ms)
+Completed 200 OK in 28ms (Views: 24.6ms | ActiveRecord: 0.0ms)
+Started POST "/users/sign_in" for 127.0.0.1 at 2016-08-09 23:14:56 +0700
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"alindeman@example.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."email" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["email", "alindeman@example.com"], ["LIMIT", 1]]
+Completed 401 Unauthorized in 3ms (ActiveRecord: 0.4ms)
+Processing by Devise::SessionsController#new as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"alindeman@example.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.7ms)
+  Rendered devise/sessions/new.html.erb within layouts/application (6.9ms)
+  Rendered shared/_toast.html.erb (0.9ms)
+  Rendered shared/_header.html.erb (2.0ms)
+Completed 200 OK in 20ms (Views: 16.9ms | ActiveRecord: 0.0ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+Started GET "/users/sign_up" for 127.0.0.1 at 2016-08-09 23:17:29 +0700
+Processing by Users::RegistrationsController#new as HTML
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (0.9ms)
+  Rendered devise/registrations/new.html.erb within layouts/application (21.7ms)
+  Rendered shared/_toast.html.erb (0.5ms)
+  Rendered shared/_header.html.erb (1.0ms)
+Completed 200 OK in 278ms (Views: 240.0ms | ActiveRecord: 2.3ms)
+Started POST "/users" for 127.0.0.1 at 2016-08-09 23:17:30 +0700
+Processing by Users::RegistrationsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"name"=>"abcdtesttest", "email"=>"abcd@example.com", "gender"=>"male", "phone"=>"0988034925", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}, "commit"=>"Sign up"}
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists (0.7ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "abcd@example.com"], ["LIMIT", 1]]
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at", "name", "phone", "gender") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["email", "abcd@example.com"], ["encrypted_password", "$2a$04$0ocOFg./54kbCZIgeI7.dOcQkHks5z57Mt6PZBdCXwQboT1pqj6QO"], ["created_at", 2016-08-09 16:17:30 UTC], ["updated_at", 2016-08-09 16:17:30 UTC], ["name", "abcdtesttest"], ["phone", "0988034925"], ["gender", "male"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[33mUPDATE "users" SET "sign_in_count" = $1, "current_sign_in_at" = $2, "last_sign_in_at" = $3, "current_sign_in_ip" = $4, "last_sign_in_ip" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["sign_in_count", 1], ["current_sign_in_at", 2016-08-09 16:17:30 UTC], ["last_sign_in_at", 2016-08-09 16:17:30 UTC], ["current_sign_in_ip", "127.0.0.1/32"], ["last_sign_in_ip", "127.0.0.1/32"], ["updated_at", 2016-08-09 16:17:30 UTC], ["id", 5]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/
+Completed 302 Found in 35ms (ActiveRecord: 1.9ms)
+Started GET "/" for 127.0.0.1 at 2016-08-09 23:17:30 +0700
+Processing by HomesController#index as HTML
+  Rendering homes/index.html.erb within layouts/application
+  Rendered homes/index.html.erb within layouts/application (0.4ms)
+  Rendered shared/_toast.html.erb (1.4ms)
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 5], ["LIMIT", 1]]
+  Rendered shared/_header.html.erb (4.7ms)
+Completed 200 OK in 12ms (Views: 10.1ms | ActiveRecord: 0.5ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.8ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["email", "alindeman@example.com"], ["encrypted_password", "$2a$04$MhmmTJTnwyznrsjQ.sTjEeMwv8nP54Ca8SndMVvPe0DBdisDmF1lm"], ["created_at", 2016-08-09 16:17:30 UTC], ["updated_at", 2016-08-09 16:17:30 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started GET "/users/sign_in" for 127.0.0.1 at 2016-08-09 23:17:30 +0700
+Processing by Devise::SessionsController#new as HTML
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (2.6ms)
+  Rendered devise/sessions/new.html.erb within layouts/application (9.3ms)
+  Rendered shared/_toast.html.erb (0.4ms)
+  Rendered shared/_header.html.erb (2.2ms)
+Completed 200 OK in 30ms (Views: 20.9ms | ActiveRecord: 0.0ms)
+Started POST "/users/sign_in" for 127.0.0.1 at 2016-08-09 23:17:30 +0700
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"alindeman@example.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."email" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["email", "alindeman@example.com"], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[33mUPDATE "users" SET "current_sign_in_at" = $1, "last_sign_in_at" = $2, "current_sign_in_ip" = $3, "last_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["current_sign_in_at", 2016-08-09 16:17:30 UTC], ["last_sign_in_at", 2016-08-09 16:17:30 UTC], ["current_sign_in_ip", "127.0.0.1/32"], ["last_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", 2016-08-09 16:17:30 UTC], ["id", 6]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/
+Completed 302 Found in 14ms (ActiveRecord: 0.9ms)
+Started GET "/" for 127.0.0.1 at 2016-08-09 23:17:30 +0700
+Processing by HomesController#index as HTML
+  Rendering homes/index.html.erb within layouts/application
+  Rendered homes/index.html.erb within layouts/application (0.3ms)
+  Rendered shared/_toast.html.erb (1.1ms)
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 6], ["LIMIT", 1]]
+  Rendered shared/_header.html.erb (4.0ms)
+Completed 200 OK in 13ms (Views: 12.0ms | ActiveRecord: 0.3ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (222.7ms)[0m  [1m[35mDROP DATABASE IF EXISTS "iflight_test"[0m
+  [1m[35m (598.7ms)[0m  [1m[35mCREATE DATABASE "iflight_test" ENCODING = 'unicode'[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[35mCREATE EXTENSION IF NOT EXISTS "plpgsql"[0m
+  [1m[35m (103.4ms)[0m  [1m[35mCREATE TABLE "airports" ("id" serial primary key, "code" character varying, "name" character varying, "name_unsigned" character varying, "short_name" character varying, "is_domestic" boolean, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (85.9ms)[0m  [1m[35mCREATE TABLE "flights" ("id" serial primary key, "order_id" integer, "category" character varying, "plane_category_id" integer, "time_depart" timestamp, "time_arrive" timestamp, "code_flight" character varying, "code_book" character varying, "price_web" decimal, "price_total" decimal, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (53.0ms)[0m  [1m[35mCREATE  INDEX  "index_flights_on_order_id" ON "flights" USING btree ("order_id")[0m
+  [1m[35m (85.5ms)[0m  [1m[35mCREATE  INDEX  "index_flights_on_plane_category_id" ON "flights" USING btree ("plane_category_id")[0m
+  [1m[35m (97.1ms)[0m  [1m[35mCREATE TABLE "orders" ("id" serial primary key, "order_number" character varying, "user_id" integer, "contact_name" character varying, "contact_phone" character varying, "contact_email" character varying, "contact_gender" character varying, "adult" integer, "child" integer, "infant" integer, "ori_airport_id" integer, "des_airport_id" integer, "status" character varying, "time_expired" timestamp, "price_total" decimal, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, "category" character varying)[0m
+  [1m[35m (42.4ms)[0m  [1m[35mCREATE  INDEX  "index_orders_on_user_id" ON "orders" USING btree ("user_id")[0m
+  [1m[35m (98.8ms)[0m  [1m[35mCREATE TABLE "passengers" ("id" serial primary key, "order_id" integer, "no" integer, "dob" timestamp, "category" character varying, "depart_lug_weight" integer, "return_lug_weight" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (41.8ms)[0m  [1m[35mCREATE  INDEX  "index_passengers_on_order_id" ON "passengers" USING btree ("order_id")[0m
+  [1m[35m (98.5ms)[0m  [1m[35mCREATE TABLE "plane_categories" ("id" serial primary key, "category" character varying, "name" character varying, "short_name" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (53.8ms)[0m  [1m[35mCREATE TABLE "routes" ("id" serial primary key, "ori_airport_id" integer, "des_airport_id" integer, "is_domestic" boolean, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (90.2ms)[0m  [1m[35mCREATE TABLE "users" ("id" serial primary key, "email" character varying DEFAULT '' NOT NULL, "encrypted_password" character varying DEFAULT '' NOT NULL, "reset_password_token" character varying, "reset_password_sent_at" timestamp, "remember_created_at" timestamp, "sign_in_count" integer DEFAULT 0 NOT NULL, "current_sign_in_at" timestamp, "last_sign_in_at" timestamp, "current_sign_in_ip" inet, "last_sign_in_ip" inet, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, "name" character varying, "phone" character varying, "gender" character varying, "is_admin" boolean, "is_registered" boolean, "confirmation_token" character varying, "confirmed_at" character varying, "confirmation_sent_at" timestamp, "unconfirmed_email" character varying)[0m
+  [1m[35m (51.5ms)[0m  [1m[35mCREATE UNIQUE INDEX  "index_users_on_confirmation_token" ON "users" USING btree ("confirmation_token")[0m
+  [1m[35m (42.6ms)[0m  [1m[35mCREATE UNIQUE INDEX  "index_users_on_email" ON "users" USING btree ("email")[0m
+  [1m[35m (53.5ms)[0m  [1m[35mCREATE UNIQUE INDEX  "index_users_on_reset_password_token" ON "users" USING btree ("reset_password_token")[0m
+  [1m[35m (10.6ms)[0m  [1m[35mALTER TABLE "flights" ADD CONSTRAINT "fk_rails_bb2ad672b0"
+FOREIGN KEY ("order_id")
+  REFERENCES "orders" ("id")
+[0m
+  [1m[35m (10.7ms)[0m  [1m[35mALTER TABLE "flights" ADD CONSTRAINT "fk_rails_60c3d16714"
+FOREIGN KEY ("plane_category_id")
+  REFERENCES "plane_categories" ("id")
+[0m
+  [1m[35m (10.6ms)[0m  [1m[35mALTER TABLE "orders" ADD CONSTRAINT "fk_rails_f868b47f6a"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+[0m
+  [1m[35m (10.6ms)[0m  [1m[35mALTER TABLE "passengers" ADD CONSTRAINT "fk_rails_acd2787b6f"
+FOREIGN KEY ("order_id")
+  REFERENCES "orders" ("id")
+[0m
+  [1m[35m (109.9ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying PRIMARY KEY)[0m
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT version FROM "schema_migrations"[0m
+  [1m[35m (10.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES ('20160811001009')[0m
+  [1m[35m (10.8ms)[0m  [1m[32mINSERT INTO schema_migrations (version) VALUES ('20160807075149'), ('20160807075125'), ('20160807104023'), ('20160807075132'), ('20160807075038'), ('20160807075049'), ('20160807075144'), ('20160807053124'), ('20160807101553');
+
+[0m
+  [1m[35m (86.0ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying PRIMARY KEY, "value" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.2ms)[0m  [1m[34mSELECT  "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", :environment], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "environment"], ["value", "test"], ["created_at", 2016-08-11 00:29:06 UTC], ["updated_at", 2016-08-11 00:29:06 UTC]]
+  [1m[35m (5.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.2ms)[0m  [1m[34mSELECT  "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", :environment], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+Started GET "/users/sign_up" for 127.0.0.1 at 2016-08-11 07:29:06 +0700
+Processing by Users::RegistrationsController#new as HTML
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.0ms)
+  Rendered devise/registrations/new.html.erb within layouts/application (21.9ms)
+  Rendered shared/_toast.html.erb (0.5ms)
+  Rendered shared/_header.html.erb (1.0ms)
+Completed 200 OK in 338ms (Views: 297.1ms | ActiveRecord: 2.9ms)
+Started POST "/users" for 127.0.0.1 at 2016-08-11 07:29:06 +0700
+Processing by Users::RegistrationsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"name"=>"abcdtesttest", "email"=>"abcd@example.com", "gender"=>"male", "phone"=>"0988034925", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}, "commit"=>"Sign up"}
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists (0.8ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "abcd@example.com"], ["LIMIT", 1]]
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at", "name", "phone", "gender", "confirmation_token", "confirmation_sent_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING "id"[0m  [["email", "abcd@example.com"], ["encrypted_password", "$2a$04$pjG.wnNWL.xLIWh6.dFUMuajYUrNAOd4klU5dVa7SJSSdg8hzmTy."], ["created_at", 2016-08-11 00:29:06 UTC], ["updated_at", 2016-08-11 00:29:06 UTC], ["name", "abcdtesttest"], ["phone", "0988034925"], ["gender", "male"], ["confirmation_token", "d9GTzCetCCNnYzmKtEfS"], ["confirmation_sent_at", 2016-08-11 00:29:06 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Completed 500 Internal Server Error in 24ms (ActiveRecord: 1.6ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at", "confirmation_token", "confirmation_sent_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["email", "alindeman@example.com"], ["encrypted_password", "$2a$04$btDStp4ekHc.UxOk1mXMBeqep.LRwDVvhNZBbKnJ.eIa.c/MC6OIe"], ["created_at", 2016-08-11 00:29:06 UTC], ["updated_at", 2016-08-11 00:29:06 UTC], ["confirmation_token", "Rysh9xs8c4rMtonUigRM"], ["confirmation_sent_at", 2016-08-11 00:29:06 UTC]]
+  [1m[35m (0.2ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+Started GET "/users/sign_up" for 127.0.0.1 at 2016-08-11 07:30:08 +0700
+Processing by Users::RegistrationsController#new as HTML
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.0ms)
+  Rendered devise/registrations/new.html.erb within layouts/application (21.8ms)
+  Rendered shared/_toast.html.erb (0.4ms)
+  Rendered shared/_header.html.erb (1.0ms)
+Completed 200 OK in 256ms (Views: 215.7ms | ActiveRecord: 2.3ms)
+Started POST "/users" for 127.0.0.1 at 2016-08-11 07:30:09 +0700
+Processing by Users::RegistrationsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"name"=>"abcdtesttest", "email"=>"abcd@example.com", "gender"=>"male", "phone"=>"0988034925", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}, "commit"=>"Sign up"}
+  [1m[35m (0.2ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists (0.7ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "abcd@example.com"], ["LIMIT", 1]]
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at", "name", "phone", "gender", "confirmation_token", "confirmation_sent_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING "id"[0m  [["email", "abcd@example.com"], ["encrypted_password", "$2a$04$EDiCGR1bdmwyah5M1vj6Ye22aTkTwjkZ7qnEO.9z.qlSRFtPSUU6W"], ["created_at", 2016-08-11 00:30:09 UTC], ["updated_at", 2016-08-11 00:30:09 UTC], ["name", "abcdtesttest"], ["phone", "0988034925"], ["gender", "male"], ["confirmation_token", "iKVYneKn9aEa5B4j1WGR"], ["confirmation_sent_at", 2016-08-11 00:30:09 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Completed 500 Internal Server Error in 27ms (ActiveRecord: 1.5ms)
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at", "confirmation_token", "confirmation_sent_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["email", "alindeman@example.com"], ["encrypted_password", "$2a$04$1d4FjYEiyIXLucj0fQf23O12kkhGkubtalNg3FY2PR72RqsJFgi2G"], ["created_at", 2016-08-11 00:30:09 UTC], ["updated_at", 2016-08-11 00:30:09 UTC], ["confirmation_token", "xuFJzciEkDrboDpnyntf"], ["confirmation_sent_at", 2016-08-11 00:30:09 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+Started GET "/users/sign_up" for 127.0.0.1 at 2016-08-11 07:41:06 +0700
+Processing by Users::RegistrationsController#new as HTML
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.0ms)
+  Rendered devise/registrations/new.html.erb within layouts/application (21.6ms)
+  Rendered shared/_toast.html.erb (0.5ms)
+  Rendered shared/_header.html.erb (1.2ms)
+Completed 200 OK in 299ms (Views: 258.6ms | ActiveRecord: 2.7ms)
+Started POST "/users" for 127.0.0.1 at 2016-08-11 07:41:07 +0700
+Processing by Users::RegistrationsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"name"=>"abcdtesttest", "email"=>"abcd@example.com", "gender"=>"male", "phone"=>"0988034925", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}, "commit"=>"Sign up"}
+  [1m[35m (0.2ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists (0.8ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "abcd@example.com"], ["LIMIT", 1]]
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at", "name", "phone", "gender") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["email", "abcd@example.com"], ["encrypted_password", "$2a$04$5ZDy2P5WMC0uvIB/CdvCIuqKaVDvA044SbuNj9Jb5q1pWH35pv4cu"], ["created_at", 2016-08-11 00:41:07 UTC], ["updated_at", 2016-08-11 00:41:07 UTC], ["name", "abcdtesttest"], ["phone", "0988034925"], ["gender", "male"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[33mUPDATE "users" SET "sign_in_count" = $1, "current_sign_in_at" = $2, "last_sign_in_at" = $3, "current_sign_in_ip" = $4, "last_sign_in_ip" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["sign_in_count", 1], ["current_sign_in_at", 2016-08-11 00:41:07 UTC], ["last_sign_in_at", 2016-08-11 00:41:07 UTC], ["current_sign_in_ip", "127.0.0.1/32"], ["last_sign_in_ip", "127.0.0.1/32"], ["updated_at", 2016-08-11 00:41:07 UTC], ["id", 5]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/
+Completed 302 Found in 31ms (ActiveRecord: 2.2ms)
+Started GET "/" for 127.0.0.1 at 2016-08-11 07:41:07 +0700
+Processing by HomesController#index as HTML
+  Rendering homes/index.html.erb within layouts/application
+  Rendered homes/index.html.erb within layouts/application (0.4ms)
+  Rendered shared/_toast.html.erb (0.3ms)
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 5], ["LIMIT", 1]]
+  Rendered shared/_header.html.erb (2.7ms)
+Completed 200 OK in 9ms (Views: 7.2ms | ActiveRecord: 0.5ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["email", "alindeman@example.com"], ["encrypted_password", "$2a$04$NlyBeasvCCw6lQpUEyxPle9uUnu0n1cWqR70aUnA0E/mTXLgDjNWC"], ["created_at", 2016-08-11 00:41:07 UTC], ["updated_at", 2016-08-11 00:41:07 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started GET "/users/sign_in" for 127.0.0.1 at 2016-08-11 07:41:07 +0700
+Processing by Devise::SessionsController#new as HTML
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.3ms)
+  Rendered devise/sessions/new.html.erb within layouts/application (30.7ms)
+  Rendered shared/_toast.html.erb (1.0ms)
+  Rendered shared/_header.html.erb (2.3ms)
+Completed 200 OK in 57ms (Views: 44.5ms | ActiveRecord: 0.0ms)
+Started POST "/users/sign_in" for 127.0.0.1 at 2016-08-11 07:41:07 +0700
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"alindeman@example.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."email" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["email", "alindeman@example.com"], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[33mUPDATE "users" SET "current_sign_in_at" = $1, "last_sign_in_at" = $2, "current_sign_in_ip" = $3, "last_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["current_sign_in_at", 2016-08-11 00:41:07 UTC], ["last_sign_in_at", 2016-08-11 00:41:07 UTC], ["current_sign_in_ip", "127.0.0.1/32"], ["last_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", 2016-08-11 00:41:07 UTC], ["id", 6]]
+  [1m[35m (0.2ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/
+Completed 302 Found in 29ms (ActiveRecord: 1.1ms)
+Started GET "/" for 127.0.0.1 at 2016-08-11 07:41:07 +0700
+Processing by HomesController#index as HTML
+  Rendering homes/index.html.erb within layouts/application
+  Rendered homes/index.html.erb within layouts/application (0.4ms)
+  Rendered shared/_toast.html.erb (0.9ms)
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 6], ["LIMIT", 1]]
+  Rendered shared/_header.html.erb (3.3ms)
+Completed 200 OK in 19ms (Views: 17.3ms | ActiveRecord: 0.4ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (5.4ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (35.4ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1[0m  [["key", :environment]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1[0m  [["key", :environment]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1[0m  [["key", :environment]]
+  [1m[35m (371.9ms)[0m  [1m[35mDROP DATABASE IF EXISTS "iflight_test"[0m
+  [1m[35m (2233.6ms)[0m  [1m[35mCREATE DATABASE "iflight_test" ENCODING = 'unicode'[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[35mCREATE EXTENSION IF NOT EXISTS "plpgsql"[0m
+  [1m[35m (93.3ms)[0m  [1m[35mCREATE TABLE "airports" ("id" serial primary key, "code" character varying, "name" character varying, "name_unsigned" character varying, "short_name" character varying, "is_domestic" boolean, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (87.3ms)[0m  [1m[35mCREATE TABLE "alerts" ("id" serial primary key, "email" character varying, "name" character varying, "ori_air_id" integer, "des_air_id" integer, "time_start" timestamp, "price_expect" decimal, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, "status" character varying, "token" character varying)[0m
+  [1m[35m (97.6ms)[0m  [1m[35mCREATE TABLE "crono_jobs" ("id" serial primary key, "job_id" character varying NOT NULL, "log" text, "last_performed_at" timestamp, "healthy" boolean, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (41.1ms)[0m  [1m[35mCREATE UNIQUE INDEX  "index_crono_jobs_on_job_id" ON "crono_jobs" USING btree ("job_id")[0m
+  [1m[35m (76.5ms)[0m  [1m[35mCREATE TABLE "flights" ("id" serial primary key, "order_id" integer, "category" character varying, "plane_category_id" integer, "time_depart" timestamp, "time_arrive" timestamp, "code_flight" character varying, "code_book" character varying, "price_web" decimal, "price_total" decimal, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (42.3ms)[0m  [1m[35mCREATE  INDEX  "index_flights_on_order_id" ON "flights" USING btree ("order_id")[0m
+  [1m[35m (42.3ms)[0m  [1m[35mCREATE  INDEX  "index_flights_on_plane_category_id" ON "flights" USING btree ("plane_category_id")[0m
+  [1m[35m (75.9ms)[0m  [1m[35mCREATE TABLE "orders" ("id" serial primary key, "order_number" character varying, "user_id" integer, "contact_name" character varying, "contact_phone" character varying, "contact_email" character varying, "contact_gender" character varying, "adult" integer, "child" integer, "infant" integer, "ori_airport_id" integer, "des_airport_id" integer, "status" character varying, "time_expired" timestamp, "price_total" decimal, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, "category" character varying)[0m
+  [1m[35m (42.4ms)[0m  [1m[35mCREATE  INDEX  "index_orders_on_user_id" ON "orders" USING btree ("user_id")[0m
+  [1m[35m (87.8ms)[0m  [1m[35mCREATE TABLE "passengers" ("id" serial primary key, "order_id" integer, "no" integer, "dob" timestamp, "category" character varying, "depart_lug_weight" integer, "return_lug_weight" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (51.9ms)[0m  [1m[35mCREATE  INDEX  "index_passengers_on_order_id" ON "passengers" USING btree ("order_id")[0m
+  [1m[35m (86.4ms)[0m  [1m[35mCREATE TABLE "plane_categories" ("id" serial primary key, "category" character varying, "name" character varying, "short_name" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (64.1ms)[0m  [1m[35mCREATE TABLE "routes" ("id" serial primary key, "ori_airport_id" integer, "des_airport_id" integer, "is_domestic" boolean, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (97.0ms)[0m  [1m[35mCREATE TABLE "users" ("id" serial primary key, "email" character varying DEFAULT '' NOT NULL, "encrypted_password" character varying DEFAULT '' NOT NULL, "reset_password_token" character varying, "reset_password_sent_at" timestamp, "remember_created_at" timestamp, "sign_in_count" integer DEFAULT 0 NOT NULL, "current_sign_in_at" timestamp, "last_sign_in_at" timestamp, "current_sign_in_ip" inet, "last_sign_in_ip" inet, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, "name" character varying, "phone" character varying, "gender" character varying, "is_admin" boolean, "is_registered" boolean, "confirmation_token" character varying, "confirmed_at" character varying, "confirmation_sent_at" timestamp, "unconfirmed_email" character varying)[0m
+  [1m[35m (62.7ms)[0m  [1m[35mCREATE UNIQUE INDEX  "index_users_on_confirmation_token" ON "users" USING btree ("confirmation_token")[0m
+  [1m[35m (52.1ms)[0m  [1m[35mCREATE UNIQUE INDEX  "index_users_on_email" ON "users" USING btree ("email")[0m
+  [1m[35m (52.0ms)[0m  [1m[35mCREATE UNIQUE INDEX  "index_users_on_reset_password_token" ON "users" USING btree ("reset_password_token")[0m
+  [1m[35m (10.0ms)[0m  [1m[35mALTER TABLE "flights" ADD CONSTRAINT "fk_rails_bb2ad672b0"
+FOREIGN KEY ("order_id")
+  REFERENCES "orders" ("id")
+[0m
+  [1m[35m (10.0ms)[0m  [1m[35mALTER TABLE "flights" ADD CONSTRAINT "fk_rails_60c3d16714"
+FOREIGN KEY ("plane_category_id")
+  REFERENCES "plane_categories" ("id")
+[0m
+  [1m[35m (10.2ms)[0m  [1m[35mALTER TABLE "orders" ADD CONSTRAINT "fk_rails_f868b47f6a"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+[0m
+  [1m[35m (10.1ms)[0m  [1m[35mALTER TABLE "passengers" ADD CONSTRAINT "fk_rails_acd2787b6f"
+FOREIGN KEY ("order_id")
+  REFERENCES "orders" ("id")
+[0m
+  [1m[35m (108.6ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying PRIMARY KEY)[0m
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT version FROM "schema_migrations"[0m
+  [1m[35m (10.0ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES ('20160815122450')[0m
+  [1m[35m (10.7ms)[0m  [1m[32mINSERT INTO schema_migrations (version) VALUES ('20160807075149'), ('20160807075125'), ('20160807104023'), ('20160811001009'), ('20160814045256'), ('20160807075132'), ('20160807075038'), ('20160807075049'), ('20160807075144'), ('20160807053124'), ('20160807101553'), ('20160813043915');
+
+[0m
+  [1m[35m (107.6ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying PRIMARY KEY, "value" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.4ms)[0m  [1m[34mSELECT  "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", :environment], ["LIMIT", 1]]
+  [1m[35m (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.8ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "environment"], ["value", "test"], ["created_at", 2016-08-16 00:52:43 UTC], ["updated_at", 2016-08-16 00:52:43 UTC]]
+  [1m[35m (5.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.4ms)[0m  [1m[34mSELECT  "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", :environment], ["LIMIT", 1]]
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+Processing by FlightsController#index as HTML
+  Rendering flights/index.html.erb within layouts/application
+  Rendered flights/index.html.erb within layouts/application (0.2ms)
+Completed 200 OK in 50ms (Views: 26.7ms | ActiveRecord: 14.4ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+Started GET "/users/sign_up" for 127.0.0.1 at 2016-08-16 07:55:33 +0700
+Processing by Users::RegistrationsController#new as HTML
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.6ms)
+  Rendered devise/registrations/new.html.erb within layouts/application (169.6ms)
+  Rendered shared/_toast.html.erb (0.7ms)
+  Rendered shared/_header.html.erb (1.5ms)
+Completed 200 OK in 6328ms (Views: 6283.5ms | ActiveRecord: 1.6ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.8ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at", "confirmation_token", "confirmation_sent_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["email", "alindeman@example.com"], ["encrypted_password", "$2a$04$I4.gjAy2.tEQFIZJk02AheGOusIX7MSe/ZPSWpsRCXjRFOa5qwEDm"], ["created_at", 2016-08-16 00:55:40 UTC], ["updated_at", 2016-08-16 00:55:40 UTC], ["confirmation_token", "ZvNZRCcZpts5zu---CCe"], ["confirmation_sent_at", 2016-08-16 00:55:40 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  Rendering devise/mailer/confirmation_instructions.html.erb
+  Rendered devise/mailer/confirmation_instructions.html.erb (13.6ms)
+Devise::Mailer#confirmation_instructions: processed outbound mail in 25.3ms
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+Processing by FlightsController#index as HTML
+  Rendering flights/index.html.erb within layouts/application
+  Rendered flights/index.html.erb within layouts/application (0.2ms)
+Completed 200 OK in 16ms (Views: 4.8ms | ActiveRecord: 2.3ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+Started GET "/users/sign_up" for 127.0.0.1 at 2016-08-16 07:57:08 +0700
+Processing by Users::RegistrationsController#new as HTML
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.1ms)
+  Rendered devise/registrations/new.html.erb within layouts/application (21.8ms)
+  Rendered shared/_toast.html.erb (0.6ms)
+  Rendered shared/_header.html.erb (1.4ms)
+Completed 200 OK in 355ms (Views: 315.4ms | ActiveRecord: 1.7ms)
+Started POST "/users" for 127.0.0.1 at 2016-08-16 07:57:08 +0700
+Processing by Users::RegistrationsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"name"=>"abcdtesttest", "email"=>"abcd@example.com", "gender"=>"male", "phone"=>"0988034925", "password"=>"[FILTERED]"}, "commit"=>"Sign up"}
+  [1m[35m (0.2ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists (0.7ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "abcd@example.com"], ["LIMIT", 1]]
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at", "name", "phone", "gender", "confirmation_token", "confirmation_sent_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING "id"[0m  [["email", "abcd@example.com"], ["encrypted_password", "$2a$04$NwVNNXNQW.9cS8FmBx08yuaTfRLr0X0a7hQpl9JwkHG4fbmeIHD4a"], ["created_at", 2016-08-16 00:57:09 UTC], ["updated_at", 2016-08-16 00:57:09 UTC], ["name", "abcdtesttest"], ["phone", "0988034925"], ["gender", "male"], ["confirmation_token", "xaibJ_BwrqyJJ7Ff8FeM"], ["confirmation_sent_at", 2016-08-16 00:57:09 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  Rendering devise/mailer/confirmation_instructions.html.erb
+  Rendered devise/mailer/confirmation_instructions.html.erb (4.0ms)
+Devise::Mailer#confirmation_instructions: processed outbound mail in 10.1ms
+Completed 500 Internal Server Error in 85ms (ActiveRecord: 1.4ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at", "confirmation_token", "confirmation_sent_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["email", "alindeman@example.com"], ["encrypted_password", "$2a$04$JDmz.x3QNvFnBDM8DgxuyubP35jtMgO2oljWffx8Tq7Fa1IhKJXEC"], ["created_at", 2016-08-16 00:57:09 UTC], ["updated_at", 2016-08-16 00:57:09 UTC], ["confirmation_token", "SnFa7TwRkybooR7Hxt_4"], ["confirmation_sent_at", 2016-08-16 00:57:09 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  Rendering devise/mailer/confirmation_instructions.html.erb
+  Rendered devise/mailer/confirmation_instructions.html.erb (0.7ms)
+Devise::Mailer#confirmation_instructions: processed outbound mail in 1.6ms
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (25.4ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+Processing by FlightsController#index as HTML
+  Rendering flights/index.html.erb within layouts/application
+  Rendered flights/index.html.erb within layouts/application (0.4ms)
+Completed 200 OK in 117ms (Views: 31.7ms | ActiveRecord: 58.2ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+Started GET "/users/sign_up" for 127.0.0.1 at 2016-08-16 19:48:19 +0700
+Processing by Users::RegistrationsController#new as HTML
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.7ms)
+  Rendered devise/registrations/new.html.erb within layouts/application (199.9ms)
+  Rendered shared/_toast.html.erb (0.7ms)
+  Rendered shared/_header.html.erb (1.7ms)
+Completed 200 OK in 1422ms (Views: 1336.4ms | ActiveRecord: 11.6ms)
+Started POST "/users" for 127.0.0.1 at 2016-08-16 19:48:20 +0700
+Processing by Users::RegistrationsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"name"=>"abcdtesttest", "email"=>"abcd@example.com", "gender"=>"male", "phone"=>"0988034925", "password"=>"[FILTERED]"}, "commit"=>"Sign up"}
+  [1m[35m (0.2ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists (44.9ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "abcd@example.com"], ["LIMIT", 1]]
+  [1m[35mSQL (55.6ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at", "name", "phone", "gender", "confirmation_token", "confirmation_sent_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING "id"[0m  [["email", "abcd@example.com"], ["encrypted_password", "$2a$04$ZrWny4FQ1r6K0i54YSfjwedrqMBNC4ARVhZEBbM7yKvmuoKd9Xiby"], ["created_at", 2016-08-16 12:48:20 UTC], ["updated_at", 2016-08-16 12:48:20 UTC], ["name", "abcdtesttest"], ["phone", "0988034925"], ["gender", "male"], ["confirmation_token", "xGD8Nb5xzZbsaRsfSebj"], ["confirmation_sent_at", 2016-08-16 12:48:20 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  Rendering devise/mailer/confirmation_instructions.html.erb
+  Rendered devise/mailer/confirmation_instructions.html.erb (11.6ms)
+Devise::Mailer#confirmation_instructions: processed outbound mail in 34.8ms
+Completed 500 Internal Server Error in 288ms (ActiveRecord: 100.8ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at", "confirmation_token", "confirmation_sent_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["email", "alindeman@example.com"], ["encrypted_password", "$2a$04$vEhyYAYe4sXKzaqHmbkTGu6vLSm9nJmJht1cPbzJymIxJUnpIjzue"], ["created_at", 2016-08-16 12:48:21 UTC], ["updated_at", 2016-08-16 12:48:21 UTC], ["confirmation_token", "GUf5miZ3CThFyuY6pa1W"], ["confirmation_sent_at", 2016-08-16 12:48:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  Rendering devise/mailer/confirmation_instructions.html.erb
+  Rendered devise/mailer/confirmation_instructions.html.erb (0.8ms)
+Devise::Mailer#confirmation_instructions: processed outbound mail in 1.7ms
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+Processing by FlightsController#index as HTML
+  Rendering flights/index.html.erb within layouts/application
+  Rendered flights/index.html.erb within layouts/application (0.3ms)
+Completed 200 OK in 17ms (Views: 5.3ms | ActiveRecord: 2.8ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+Started GET "/users/sign_up" for 127.0.0.1 at 2016-08-16 20:11:45 +0700
+Processing by Users::RegistrationsController#new as HTML
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.1ms)
+  Rendered devise/registrations/new.html.erb within layouts/application (34.5ms)
+  Rendered shared/_toast.html.erb (0.5ms)
+  Rendered shared/_header.html.erb (2.4ms)
+Completed 200 OK in 400ms (Views: 361.2ms | ActiveRecord: 1.6ms)
+Started POST "/users" for 127.0.0.1 at 2016-08-16 20:11:45 +0700
+Processing by Users::RegistrationsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"name"=>"abcdtesttest", "email"=>"abcd@example.com", "gender"=>"male", "phone"=>"0988034925", "password"=>"[FILTERED]"}, "commit"=>"Sign up"}
+  [1m[35m (0.2ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists (0.7ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "abcd@example.com"], ["LIMIT", 1]]
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at", "name", "phone", "gender", "confirmation_token", "confirmation_sent_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING "id"[0m  [["email", "abcd@example.com"], ["encrypted_password", "$2a$04$lanSZ9NU1HWG/SgLWsDrO.ANfunltULmj5cmlha5kJojjNdDzWtuS"], ["created_at", 2016-08-16 13:11:45 UTC], ["updated_at", 2016-08-16 13:11:45 UTC], ["name", "abcdtesttest"], ["phone", "0988034925"], ["gender", "male"], ["confirmation_token", "aTyXyguQ8VM8spF-qt4p"], ["confirmation_sent_at", 2016-08-16 13:11:45 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  Rendering devise/mailer/confirmation_instructions.html.erb
+  Rendered devise/mailer/confirmation_instructions.html.erb (2.5ms)
+Devise::Mailer#confirmation_instructions: processed outbound mail in 7.5ms
+Completed 500 Internal Server Error in 41ms (ActiveRecord: 1.5ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at", "confirmation_token", "confirmation_sent_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["email", "alindeman@example.com"], ["encrypted_password", "$2a$04$kd/U6mUEXHUx4QYcCa8NMuz9Nw4c.YPLtFl1OL26HqfQtEbc8mPEG"], ["created_at", 2016-08-16 13:11:45 UTC], ["updated_at", 2016-08-16 13:11:45 UTC], ["confirmation_token", "EJC1nUbSKJayLxM37BN4"], ["confirmation_sent_at", 2016-08-16 13:11:45 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  Rendering devise/mailer/confirmation_instructions.html.erb
+  Rendered devise/mailer/confirmation_instructions.html.erb (0.7ms)
+Devise::Mailer#confirmation_instructions: processed outbound mail in 1.7ms
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+Processing by FlightsController#index as HTML
+  Rendering flights/index.html.erb within layouts/application
+  Rendered flights/index.html.erb within layouts/application (0.2ms)
+Completed 200 OK in 16ms (Views: 5.0ms | ActiveRecord: 2.2ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+Started GET "/users/sign_up" for 127.0.0.1 at 2016-08-16 20:13:27 +0700
+Processing by Users::RegistrationsController#new as HTML
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.1ms)
+  Rendered devise/registrations/new.html.erb within layouts/application (22.0ms)
+  Rendered shared/_toast.html.erb (0.6ms)
+  Rendered shared/_header.html.erb (1.4ms)
+Completed 200 OK in 353ms (Views: 314.5ms | ActiveRecord: 1.5ms)
+Started POST "/users" for 127.0.0.1 at 2016-08-16 20:13:28 +0700
+Processing by Users::RegistrationsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"name"=>"abcdtesttest", "email"=>"abcd@example.com", "gender"=>"male", "phone"=>"0988034925", "password"=>"[FILTERED]"}, "commit"=>"Sign up"}
+  [1m[35m (0.2ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists (0.8ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "abcd@example.com"], ["LIMIT", 1]]
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at", "name", "phone", "gender", "confirmation_token", "confirmation_sent_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING "id"[0m  [["email", "abcd@example.com"], ["encrypted_password", "$2a$04$X8YLfcq2Va2abMMjj6gYxOM69TDMbjiqCB00pS.HPf72/uCZpMVRy"], ["created_at", 2016-08-16 13:13:28 UTC], ["updated_at", 2016-08-16 13:13:28 UTC], ["name", "abcdtesttest"], ["phone", "0988034925"], ["gender", "male"], ["confirmation_token", "4UcZfNaDS3FgfWk1H2cd"], ["confirmation_sent_at", 2016-08-16 13:13:28 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  Rendering devise/mailer/confirmation_instructions.html.erb
+  Rendered devise/mailer/confirmation_instructions.html.erb (0.8ms)
+Devise::Mailer#confirmation_instructions: processed outbound mail in 160.9ms
+Sent mail to abcd@example.com (28.0ms)
+Date: Tue, 16 Aug 2016 20:13:28 +0700
+From: please-change-me-at-config-initializers-devise@example.com
+Reply-To: please-change-me-at-config-initializers-devise@example.com
+To: abcd@example.com
+Message-ID: <57b3117866932_bcd4c91041988e@pinbang-Latitude-3540.mail>
+Subject: Confirmation instructions
+Mime-Version: 1.0
+Content-Type: text/html;
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+<p>Welcome abcd@example.com!</p>
+
+<p>You can confirm your account email through the link below:</p>
+
+<p><a href="http://localhost:3000/users/confirmation?confirmation_token=4UcZfNaDS3FgfWk1H2cd">Confirm my account</a></p>
+
+Redirected to http://www.example.com/
+Completed 302 Found in 235ms (ActiveRecord: 1.5ms)
+Started GET "/" for 127.0.0.1 at 2016-08-16 20:13:28 +0700
+Processing by HomesController#index as HTML
+  Rendering homes/index.html.erb within layouts/application
+  [1m[36mAirport Load (1.5ms)[0m  [1m[34mSELECT "airports".* FROM "airports" WHERE (id IN (SELECT "routes"."ori_airport_id" FROM "routes")) ORDER BY "airports"."name_unsigned" ASC[0m
+  Rendered homes/index.html.erb within layouts/application (8.4ms)
+  Rendered shared/_toast.html.erb (1.0ms)
+  Rendered shared/_header.html.erb (2.0ms)
+Completed 200 OK in 35ms (Views: 16.7ms | ActiveRecord: 4.5ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at", "confirmation_token", "confirmation_sent_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["email", "alindeman@example.com"], ["encrypted_password", "$2a$04$lRoCP1hoygl/9bTxK/FJGurJpUZbPpOZX97Dz9dvPjNNbhmMt.7/O"], ["created_at", 2016-08-16 13:13:28 UTC], ["updated_at", 2016-08-16 13:13:28 UTC], ["confirmation_token", "YZFiVj8Yz1cQorHU7b8L"], ["confirmation_sent_at", 2016-08-16 13:13:28 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  Rendering devise/mailer/confirmation_instructions.html.erb
+  Rendered devise/mailer/confirmation_instructions.html.erb (0.7ms)
+Devise::Mailer#confirmation_instructions: processed outbound mail in 6.2ms
+Sent mail to alindeman@example.com (1.7ms)
+Date: Tue, 16 Aug 2016 20:13:28 +0700
+From: please-change-me-at-config-initializers-devise@example.com
+Reply-To: please-change-me-at-config-initializers-devise@example.com
+To: alindeman@example.com
+Message-ID: <57b311788637b_bcd4c91041994c@pinbang-Latitude-3540.mail>
+Subject: Confirmation instructions
+Mime-Version: 1.0
+Content-Type: text/html;
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+<p>Welcome alindeman@example.com!</p>
+
+<p>You can confirm your account email through the link below:</p>
+
+<p><a href="http://localhost:3000/users/confirmation?confirmation_token=YZFiVj8Yz1cQorHU7b8L">Confirm my account</a></p>
+
+Started GET "/users/sign_in" for 127.0.0.1 at 2016-08-16 20:13:28 +0700
+Processing by Devise::SessionsController#new as HTML
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.2ms)
+  Rendered devise/sessions/new.html.erb within layouts/application (15.4ms)
+  Rendered shared/_toast.html.erb (0.3ms)
+  Rendered shared/_header.html.erb (1.0ms)
+Completed 200 OK in 33ms (Views: 31.3ms | ActiveRecord: 0.0ms)
+Started POST "/users/sign_in" for 127.0.0.1 at 2016-08-16 20:13:28 +0700
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"alindeman@example.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (0.6ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."email" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["email", "alindeman@example.com"], ["LIMIT", 1]]
+  [1m[35m (0.2ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Completed 401 Unauthorized in 8ms (ActiveRecord: 0.8ms)
+Started GET "/users/sign_in" for 127.0.0.1 at 2016-08-16 20:13:28 +0700
+Processing by Devise::SessionsController#new as HTML
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.0ms)
+  Rendered devise/sessions/new.html.erb within layouts/application (3.4ms)
+  Rendered shared/_toast.html.erb (0.4ms)
+  Rendered shared/_header.html.erb (0.9ms)
+Completed 200 OK in 10ms (Views: 9.0ms | ActiveRecord: 0.0ms)
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+Processing by FlightsController#index as HTML
+  Rendering flights/index.html.erb within layouts/application
+  Rendered flights/index.html.erb within layouts/application (0.2ms)
+Completed 200 OK in 15ms (Views: 4.9ms | ActiveRecord: 2.2ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+Started GET "/users/sign_up" for 127.0.0.1 at 2016-08-16 20:15:30 +0700
+Processing by Users::RegistrationsController#new as HTML
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.1ms)
+  Rendered devise/registrations/new.html.erb within layouts/application (21.8ms)
+  Rendered shared/_toast.html.erb (0.4ms)
+  Rendered shared/_header.html.erb (1.3ms)
+Completed 200 OK in 361ms (Views: 322.7ms | ActiveRecord: 1.6ms)
+Started POST "/users" for 127.0.0.1 at 2016-08-16 20:15:31 +0700
+Processing by Users::RegistrationsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"name"=>"abcdtesttest", "email"=>"abcd@example.com", "gender"=>"male", "phone"=>"0988034925", "password"=>"[FILTERED]"}, "commit"=>"Sign up"}
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists (0.8ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "abcd@example.com"], ["LIMIT", 1]]
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at", "name", "phone", "gender", "confirmation_token", "confirmation_sent_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING "id"[0m  [["email", "abcd@example.com"], ["encrypted_password", "$2a$04$vjKjKSLKsY2QEn0uVxIMTuU9bzpZLWZT5yJSUCY7FEFvfEZmR0vnq"], ["created_at", 2016-08-16 13:15:31 UTC], ["updated_at", 2016-08-16 13:15:31 UTC], ["name", "abcdtesttest"], ["phone", "0988034925"], ["gender", "male"], ["confirmation_token", "f4Vkgd9F9yc-bw9VVXYv"], ["confirmation_sent_at", 2016-08-16 13:15:31 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  Rendering devise/mailer/confirmation_instructions.html.erb
+  Rendered devise/mailer/confirmation_instructions.html.erb (0.7ms)
+Devise::Mailer#confirmation_instructions: processed outbound mail in 99.2ms
+Sent mail to abcd@example.com (5.6ms)
+Date: Tue, 16 Aug 2016 20:15:31 +0700
+From: please-change-me-at-config-initializers-devise@example.com
+Reply-To: please-change-me-at-config-initializers-devise@example.com
+To: abcd@example.com
+Message-ID: <57b311f334898_bf210f70fc294c0@pinbang-Latitude-3540.mail>
+Subject: Confirmation instructions
+Mime-Version: 1.0
+Content-Type: text/html;
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+<p>Welcome abcd@example.com!</p>
+
+<p>You can confirm your account email through the link below:</p>
+
+<p><a href="http://localhost:3000/users/confirmation?confirmation_token=f4Vkgd9F9yc-bw9VVXYv">Confirm my account</a></p>
+
+Redirected to http://www.example.com/
+Completed 302 Found in 149ms (ActiveRecord: 1.4ms)
+Started GET "/" for 127.0.0.1 at 2016-08-16 20:15:31 +0700
+Processing by HomesController#index as HTML
+  Rendering homes/index.html.erb within layouts/application
+  [1m[36mAirport Load (0.7ms)[0m  [1m[34mSELECT "airports".* FROM "airports" WHERE (id IN (SELECT "routes"."ori_airport_id" FROM "routes")) ORDER BY "airports"."name_unsigned" ASC[0m
+  Rendered homes/index.html.erb within layouts/application (4.0ms)
+  Rendered shared/_toast.html.erb (0.3ms)
+  Rendered shared/_header.html.erb (0.9ms)
+Completed 200 OK in 12ms (Views: 7.7ms | ActiveRecord: 2.4ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at", "confirmation_token", "confirmation_sent_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["email", "alindeman@example.com"], ["encrypted_password", "$2a$04$pwJyIVJ8McXWucNfiQmzheXAoJf6sTDmshs48AmTTDRKrwzGNR.KO"], ["created_at", 2016-08-16 13:15:31 UTC], ["updated_at", 2016-08-16 13:15:31 UTC], ["confirmation_token", "TBBab63W7xLXo5trgdky"], ["confirmation_sent_at", 2016-08-16 13:15:31 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  Rendering devise/mailer/confirmation_instructions.html.erb
+  Rendered devise/mailer/confirmation_instructions.html.erb (0.6ms)
+Devise::Mailer#confirmation_instructions: processed outbound mail in 5.7ms
+Sent mail to alindeman@example.com (1.9ms)
+Date: Tue, 16 Aug 2016 20:15:31 +0700
+From: please-change-me-at-config-initializers-devise@example.com
+Reply-To: please-change-me-at-config-initializers-devise@example.com
+To: alindeman@example.com
+Message-ID: <57b311f33d8ab_bf210f70fc2957@pinbang-Latitude-3540.mail>
+Subject: Confirmation instructions
+Mime-Version: 1.0
+Content-Type: text/html;
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+<p>Welcome alindeman@example.com!</p>
+
+<p>You can confirm your account email through the link below:</p>
+
+<p><a href="http://localhost:3000/users/confirmation?confirmation_token=TBBab63W7xLXo5trgdky">Confirm my account</a></p>
+
+Started GET "/users/sign_in" for 127.0.0.1 at 2016-08-16 20:15:31 +0700
+Processing by Devise::SessionsController#new as HTML
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.2ms)
+  Rendered devise/sessions/new.html.erb within layouts/application (4.8ms)
+  Rendered shared/_toast.html.erb (0.5ms)
+  Rendered shared/_header.html.erb (1.0ms)
+Completed 200 OK in 12ms (Views: 11.0ms | ActiveRecord: 0.0ms)
+Started POST "/users/sign_in" for 127.0.0.1 at 2016-08-16 20:15:31 +0700
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"alindeman@example.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."email" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["email", "alindeman@example.com"], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Completed 401 Unauthorized in 7ms (ActiveRecord: 0.7ms)
+Started GET "/users/sign_in" for 127.0.0.1 at 2016-08-16 20:15:31 +0700
+Processing by Devise::SessionsController#new as HTML
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (0.9ms)
+  Rendered devise/sessions/new.html.erb within layouts/application (3.2ms)
+  Rendered shared/_toast.html.erb (0.3ms)
+  Rendered shared/_header.html.erb (0.9ms)
+Completed 200 OK in 10ms (Views: 8.6ms | ActiveRecord: 0.0ms)
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+Processing by FlightsController#index as HTML
+  Rendering flights/index.html.erb within layouts/application
+  Rendered flights/index.html.erb within layouts/application (0.3ms)
+Completed 200 OK in 18ms (Views: 5.3ms | ActiveRecord: 3.0ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+Started GET "/users/sign_up" for 127.0.0.1 at 2016-08-16 20:18:46 +0700
+Processing by Users::RegistrationsController#new as HTML
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.1ms)
+  Rendered devise/registrations/new.html.erb within layouts/application (22.7ms)
+  Rendered shared/_toast.html.erb (0.4ms)
+  Rendered shared/_header.html.erb (1.2ms)
+Completed 200 OK in 357ms (Views: 317.2ms | ActiveRecord: 1.8ms)
+Started POST "/users" for 127.0.0.1 at 2016-08-16 20:18:47 +0700
+Processing by Users::RegistrationsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"name"=>"abcdtesttest", "email"=>"abcd@example.com", "gender"=>"male", "phone"=>"0988034925", "password"=>"[FILTERED]"}, "commit"=>"Sign up"}
+  [1m[35m (0.2ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists (0.9ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "abcd@example.com"], ["LIMIT", 1]]
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at", "name", "phone", "gender", "confirmation_token", "confirmation_sent_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING "id"[0m  [["email", "abcd@example.com"], ["encrypted_password", "$2a$04$BzewHVhRpdcBN2xjhUSwMearkuQ/TMPfA/UWI0CcsZ.3TSFNShpAu"], ["created_at", 2016-08-16 13:18:47 UTC], ["updated_at", 2016-08-16 13:18:47 UTC], ["name", "abcdtesttest"], ["phone", "0988034925"], ["gender", "male"], ["confirmation_token", "xhgzbnECkipWX1enXKWy"], ["confirmation_sent_at", 2016-08-16 13:18:47 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  Rendering devise/mailer/confirmation_instructions.html.erb
+  Rendered devise/mailer/confirmation_instructions.html.erb (0.7ms)
+Devise::Mailer#confirmation_instructions: processed outbound mail in 100.0ms
+Sent mail to abcd@example.com (5.6ms)
+Date: Tue, 16 Aug 2016 20:18:47 +0700
+From: please-change-me-at-config-initializers-devise@example.com
+Reply-To: please-change-me-at-config-initializers-devise@example.com
+To: abcd@example.com
+Message-ID: <57b312b728455_c449fb104475a1@pinbang-Latitude-3540.mail>
+Subject: Confirmation instructions
+Mime-Version: 1.0
+Content-Type: text/html;
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+<p>Welcome abcd@example.com!</p>
+
+<p>You can confirm your account email through the link below:</p>
+
+<p><a href="http://localhost:3000/users/confirmation?confirmation_token=xhgzbnECkipWX1enXKWy">Confirm my account</a></p>
+
+Redirected to http://www.example.com/
+Completed 302 Found in 149ms (ActiveRecord: 1.6ms)
+Started GET "/" for 127.0.0.1 at 2016-08-16 20:18:47 +0700
+Processing by HomesController#index as HTML
+  Rendering homes/index.html.erb within layouts/application
+  [1m[36mAirport Load (0.6ms)[0m  [1m[34mSELECT "airports".* FROM "airports" WHERE (id IN (SELECT "routes"."ori_airport_id" FROM "routes")) ORDER BY "airports"."name_unsigned" ASC[0m
+  Rendered homes/index.html.erb within layouts/application (3.8ms)
+  Rendered shared/_toast.html.erb (0.3ms)
+  Rendered shared/_header.html.erb (0.9ms)
+Completed 200 OK in 12ms (Views: 7.6ms | ActiveRecord: 2.1ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at", "confirmed_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["email", "alindeman@example.com"], ["encrypted_password", "$2a$04$NQ4XBbUp2FeM9KBtMJGnxuEr052vBba7AIb4e0m8lCzsHBIj8lbcm"], ["created_at", 2016-08-16 13:18:47 UTC], ["updated_at", 2016-08-16 13:18:47 UTC], ["confirmed_at", "2016-08-16 13:18:47 UTC"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started GET "/users/sign_in" for 127.0.0.1 at 2016-08-16 20:18:47 +0700
+Processing by Devise::SessionsController#new as HTML
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.2ms)
+  Rendered devise/sessions/new.html.erb within layouts/application (4.7ms)
+  Rendered shared/_toast.html.erb (0.3ms)
+  Rendered shared/_header.html.erb (1.1ms)
+Completed 200 OK in 12ms (Views: 10.7ms | ActiveRecord: 0.0ms)
+Started POST "/users/sign_in" for 127.0.0.1 at 2016-08-16 20:18:47 +0700
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"alindeman@example.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."email" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["email", "alindeman@example.com"], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (9.8ms)[0m  [1m[33mUPDATE "users" SET "current_sign_in_at" = $1, "last_sign_in_at" = $2, "current_sign_in_ip" = $3, "last_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["current_sign_in_at", 2016-08-16 13:18:47 UTC], ["last_sign_in_at", 2016-08-16 13:18:47 UTC], ["current_sign_in_ip", "127.0.0.1/32"], ["last_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", 2016-08-16 13:18:47 UTC], ["id", 13]]
+  [1m[35m (0.2ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/
+Completed 302 Found in 40ms (ActiveRecord: 10.6ms)
+Started GET "/" for 127.0.0.1 at 2016-08-16 20:18:47 +0700
+Processing by HomesController#index as HTML
+  Rendering homes/index.html.erb within layouts/application
+  [1m[36mAirport Load (0.4ms)[0m  [1m[34mSELECT "airports".* FROM "airports" WHERE (id IN (SELECT "routes"."ori_airport_id" FROM "routes")) ORDER BY "airports"."name_unsigned" ASC[0m
+  Rendered homes/index.html.erb within layouts/application (2.4ms)
+  Rendered shared/_toast.html.erb (0.3ms)
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 13], ["LIMIT", 1]]
+  Rendered shared/_header.html.erb (2.1ms)
+Completed 200 OK in 10ms (Views: 7.7ms | ActiveRecord: 0.7ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+Processing by FlightsController#index as HTML
+  Rendering flights/index.html.erb within layouts/application
+  Rendered flights/index.html.erb within layouts/application (0.3ms)
+Completed 200 OK in 17ms (Views: 5.2ms | ActiveRecord: 2.5ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+Started GET "/users/sign_up" for 127.0.0.1 at 2016-08-16 20:21:17 +0700
+Processing by Users::RegistrationsController#new as HTML
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.2ms)
+  Rendered devise/registrations/new.html.erb within layouts/application (22.4ms)
+  Rendered shared/_toast.html.erb (0.5ms)
+  Rendered shared/_header.html.erb (1.2ms)
+Completed 200 OK in 357ms (Views: 317.7ms | ActiveRecord: 1.6ms)
+Started POST "/users" for 127.0.0.1 at 2016-08-16 20:21:18 +0700
+Processing by Users::RegistrationsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"name"=>"abcdtesttest", "email"=>"abcd@example.com", "gender"=>"male", "phone"=>"0988034925", "password"=>"[FILTERED]"}, "commit"=>"Sign up"}
+  [1m[35m (0.3ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists (0.7ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "abcd@example.com"], ["LIMIT", 1]]
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at", "name", "phone", "gender", "confirmation_token", "confirmation_sent_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING "id"[0m  [["email", "abcd@example.com"], ["encrypted_password", "$2a$04$dvzVUpP1PxhZ.4gRjHjD3OKpArWp/Vw1Q.MnHKUbejOJ4BRdIhkdC"], ["created_at", 2016-08-16 13:21:18 UTC], ["updated_at", 2016-08-16 13:21:18 UTC], ["name", "abcdtesttest"], ["phone", "0988034925"], ["gender", "male"], ["confirmation_token", "3BW-GnAYy_kKRLp6sNpu"], ["confirmation_sent_at", 2016-08-16 13:21:18 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  Rendering devise/mailer/confirmation_instructions.html.erb
+  Rendered devise/mailer/confirmation_instructions.html.erb (1.0ms)
+Devise::Mailer#confirmation_instructions: processed outbound mail in 114.4ms
+Sent mail to abcd@example.com (5.6ms)
+Date: Tue, 16 Aug 2016 20:21:18 +0700
+From: please-change-me-at-config-initializers-devise@example.com
+Reply-To: please-change-me-at-config-initializers-devise@example.com
+To: abcd@example.com
+Message-ID: <57b3134e6512d_c9fb890fc245b8@pinbang-Latitude-3540.mail>
+Subject: Confirmation instructions
+Mime-Version: 1.0
+Content-Type: text/html;
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+<p>Welcome abcd@example.com!</p>
+
+<p>You can confirm your account email through the link below:</p>
+
+<p><a href="http://localhost:3000/users/confirmation?confirmation_token=3BW-GnAYy_kKRLp6sNpu">Confirm my account</a></p>
+
+Redirected to http://www.example.com/
+Completed 302 Found in 158ms (ActiveRecord: 1.5ms)
+Started GET "/" for 127.0.0.1 at 2016-08-16 20:21:18 +0700
+Processing by HomesController#index as HTML
+  Rendering homes/index.html.erb within layouts/application
+  [1m[36mAirport Load (0.6ms)[0m  [1m[34mSELECT "airports".* FROM "airports" WHERE (id IN (SELECT "routes"."ori_airport_id" FROM "routes")) ORDER BY "airports"."name_unsigned" ASC[0m
+  Rendered homes/index.html.erb within layouts/application (4.3ms)
+  Rendered shared/_toast.html.erb (0.3ms)
+  Rendered shared/_header.html.erb (0.9ms)
+Completed 200 OK in 13ms (Views: 7.8ms | ActiveRecord: 2.8ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at", "confirmed_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["email", "alindeman@example.com"], ["encrypted_password", "$2a$04$AjpE4wr4yhD4xV3DP.efbuMQGZjFrwpbI.a0XszAYz4Pl4.oxEhZm"], ["created_at", 2016-08-16 13:21:18 UTC], ["updated_at", 2016-08-16 13:21:18 UTC], ["confirmed_at", "2016-08-16 13:21:18 UTC"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started GET "/users/sign_in" for 127.0.0.1 at 2016-08-16 20:21:18 +0700
+Processing by Devise::SessionsController#new as HTML
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.2ms)
+  Rendered devise/sessions/new.html.erb within layouts/application (4.7ms)
+  Rendered shared/_toast.html.erb (0.4ms)
+  Rendered shared/_header.html.erb (0.9ms)
+Completed 200 OK in 12ms (Views: 10.5ms | ActiveRecord: 0.0ms)
+Started POST "/users/sign_in" for 127.0.0.1 at 2016-08-16 20:21:18 +0700
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"alindeman@example.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."email" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["email", "alindeman@example.com"], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[33mUPDATE "users" SET "current_sign_in_at" = $1, "last_sign_in_at" = $2, "current_sign_in_ip" = $3, "last_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["current_sign_in_at", 2016-08-16 13:21:18 UTC], ["last_sign_in_at", 2016-08-16 13:21:18 UTC], ["current_sign_in_ip", "127.0.0.1/32"], ["last_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", 2016-08-16 13:21:18 UTC], ["id", 15]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/
+Completed 302 Found in 12ms (ActiveRecord: 1.2ms)
+Started GET "/" for 127.0.0.1 at 2016-08-16 20:21:18 +0700
+Processing by HomesController#index as HTML
+  Rendering homes/index.html.erb within layouts/application
+  [1m[36mAirport Load (0.4ms)[0m  [1m[34mSELECT "airports".* FROM "airports" WHERE (id IN (SELECT "routes"."ori_airport_id" FROM "routes")) ORDER BY "airports"."name_unsigned" ASC[0m
+  Rendered homes/index.html.erb within layouts/application (2.4ms)
+  Rendered shared/_toast.html.erb (0.4ms)
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 15], ["LIMIT", 1]]
+  Rendered shared/_header.html.erb (2.1ms)
+Completed 200 OK in 10ms (Views: 7.9ms | ActiveRecord: 0.7ms)
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (29.6ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+Processing by FlightsController#index as HTML
+  Rendering flights/index.html.erb within layouts/application
+  Rendered flights/index.html.erb within layouts/application (0.6ms)
+Completed 200 OK in 76ms (Views: 15.9ms | ActiveRecord: 47.4ms)
+  [1m[35m (0.4ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+Started GET "/users/sign_up" for 127.0.0.1 at 2016-08-17 07:39:23 +0700
+Processing by Users::RegistrationsController#new as HTML
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.1ms)
+  Rendered devise/registrations/new.html.erb within layouts/application (39.7ms)
+  Rendered shared/_toast.html.erb (0.5ms)
+  Rendered shared/_header.html.erb (1.2ms)
+Completed 200 OK in 5432ms (Views: 5354.9ms | ActiveRecord: 11.5ms)
+Started POST "/users" for 127.0.0.1 at 2016-08-17 07:39:28 +0700
+Processing by Users::RegistrationsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"name"=>"abcdtesttest", "email"=>"abcd@example.com", "gender"=>"male", "phone"=>"0988034925", "password"=>"[FILTERED]"}, "commit"=>"Sign up"}
+  [1m[35m (0.2ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists (43.4ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "abcd@example.com"], ["LIMIT", 1]]
+  [1m[35mSQL (33.5ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at", "name", "phone", "gender", "confirmation_token", "confirmation_sent_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING "id"[0m  [["email", "abcd@example.com"], ["encrypted_password", "$2a$04$8M58nyo.o6Lui5.0kkfwAOHnO96IErdyZxgAix.Q/.uggflrkLJ9q"], ["created_at", 2016-08-17 00:39:28 UTC], ["updated_at", 2016-08-17 00:39:28 UTC], ["name", "abcdtesttest"], ["phone", "0988034925"], ["gender", "male"], ["confirmation_token", "baDunSRb2xmnU-vk4fDb"], ["confirmation_sent_at", 2016-08-17 00:39:28 UTC]]
+  [1m[35m (0.2ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  Rendering devise/mailer/confirmation_instructions.html.erb
+  Rendered devise/mailer/confirmation_instructions.html.erb (1.9ms)
+Devise::Mailer#confirmation_instructions: processed outbound mail in 174.4ms
+Sent mail to abcd@example.com (6.5ms)
+Date: Wed, 17 Aug 2016 07:39:29 +0700
+From: please-change-me-at-config-initializers-devise@example.com
+Reply-To: please-change-me-at-config-initializers-devise@example.com
+To: abcd@example.com
+Message-ID: <57b3b241194b6_11df7cd0f8249ca@pinbang-Latitude-3540.mail>
+Subject: Confirmation instructions
+Mime-Version: 1.0
+Content-Type: text/html;
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+<p>Welcome abcd@example.com!</p>
+
+<p>You can confirm your account email through the link below:</p>
+
+<p><a href="http://localhost:3000/users/confirmation?confirmation_token=baDunSRb2xmnU-vk4fDb">Confirm my account</a></p>
+
+Redirected to http://www.example.com/
+Completed 302 Found in 301ms (ActiveRecord: 77.3ms)
+Started GET "/" for 127.0.0.1 at 2016-08-17 07:39:29 +0700
+Processing by HomesController#index as HTML
+  Rendering homes/index.html.erb within layouts/application
+  [1m[36mAirport Load (0.7ms)[0m  [1m[34mSELECT "airports".* FROM "airports" WHERE (id IN (SELECT "routes"."ori_airport_id" FROM "routes")) ORDER BY "airports"."name_unsigned" ASC[0m
+  Rendered homes/index.html.erb within layouts/application (4.7ms)
+  Rendered shared/_toast.html.erb (0.4ms)
+  Rendered shared/_header.html.erb (1.1ms)
+Completed 200 OK in 15ms (Views: 9.2ms | ActiveRecord: 2.6ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at", "confirmed_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["email", "alindeman@example.com"], ["encrypted_password", "$2a$04$dyIvWMfdvn6c5eJkMfZ1luCVqZh7Xst6bvAMBlZN3CAbHkPRn0bE2"], ["created_at", 2016-08-17 00:39:29 UTC], ["updated_at", 2016-08-17 00:39:29 UTC], ["confirmed_at", "2016-08-17 00:39:29 UTC"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started GET "/users/sign_in" for 127.0.0.1 at 2016-08-17 07:39:29 +0700
+Processing by Devise::SessionsController#new as HTML
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.4ms)
+  Rendered devise/sessions/new.html.erb within layouts/application (5.5ms)
+  Rendered shared/_toast.html.erb (0.5ms)
+  Rendered shared/_header.html.erb (1.1ms)
+Completed 200 OK in 14ms (Views: 12.5ms | ActiveRecord: 0.0ms)
+Started POST "/users/sign_in" for 127.0.0.1 at 2016-08-17 07:39:29 +0700
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"alindeman@example.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."email" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["email", "alindeman@example.com"], ["LIMIT", 1]]
+  [1m[35m (0.2ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (6.1ms)[0m  [1m[33mUPDATE "users" SET "current_sign_in_at" = $1, "last_sign_in_at" = $2, "current_sign_in_ip" = $3, "last_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["current_sign_in_at", 2016-08-17 00:39:29 UTC], ["last_sign_in_at", 2016-08-17 00:39:29 UTC], ["current_sign_in_ip", "127.0.0.1/32"], ["last_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", 2016-08-17 00:39:29 UTC], ["id", 17]]
+  [1m[35m (0.2ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/
+Completed 302 Found in 19ms (ActiveRecord: 7.1ms)
+Started GET "/" for 127.0.0.1 at 2016-08-17 07:39:29 +0700
+Processing by HomesController#index as HTML
+  Rendering homes/index.html.erb within layouts/application
+  [1m[36mAirport Load (0.4ms)[0m  [1m[34mSELECT "airports".* FROM "airports" WHERE (id IN (SELECT "routes"."ori_airport_id" FROM "routes")) ORDER BY "airports"."name_unsigned" ASC[0m
+  Rendered homes/index.html.erb within layouts/application (2.2ms)
+  Rendered shared/_toast.html.erb (0.4ms)
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 17], ["LIMIT", 1]]
+  Rendered shared/_header.html.erb (2.0ms)
+Completed 200 OK in 10ms (Views: 7.8ms | ActiveRecord: 0.7ms)
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (31.1ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+Processing by FlightsController#index as HTML
+  Rendering flights/index.html.erb within layouts/application
+  Rendered flights/index.html.erb within layouts/application (0.3ms)
+Completed 200 OK in 128ms (Views: 39.0ms | ActiveRecord: 56.9ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+Started GET "/users/sign_up" for 127.0.0.1 at 2016-08-19 07:34:47 +0700
+Processing by Users::RegistrationsController#new as HTML
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.7ms)
+  Rendered devise/registrations/new.html.erb within layouts/application (207.8ms)
+  Rendered shared/_toast.html.erb (0.7ms)
+  Rendered shared/_header.html.erb (1.6ms)
+Completed 200 OK in 1544ms (Views: 1466.6ms | ActiveRecord: 10.5ms)
+Started POST "/users" for 127.0.0.1 at 2016-08-19 07:34:48 +0700
+Processing by Users::RegistrationsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"name"=>"abcdtesttest", "email"=>"abcd@example.com", "gender"=>"male", "phone"=>"0988034925", "password"=>"[FILTERED]"}, "commit"=>"Sign up"}
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists (55.7ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "abcd@example.com"], ["LIMIT", 1]]
+  [1m[35mSQL (55.3ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at", "name", "phone", "gender", "confirmation_token", "confirmation_sent_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING "id"[0m  [["email", "abcd@example.com"], ["encrypted_password", "$2a$04$VcLWHV5trsw1PNGgSHwpYewkJe.DugRCz18oMtW6bO6UfZMoG4ylu"], ["created_at", 2016-08-19 00:34:48 UTC], ["updated_at", 2016-08-19 00:34:48 UTC], ["name", "abcdtesttest"], ["phone", "0988034925"], ["gender", "male"], ["confirmation_token", "LjfJ88BjkoP-tRi2NBQ-"], ["confirmation_sent_at", 2016-08-19 00:34:48 UTC]]
+  [1m[35m (0.2ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  Rendering devise/mailer/confirmation_instructions.html.erb
+  Rendered devise/mailer/confirmation_instructions.html.erb (0.7ms)
+Devise::Mailer#confirmation_instructions: processed outbound mail in 196.6ms
+Sent mail to abcd@example.com (23.2ms)
+Date: Fri, 19 Aug 2016 07:34:49 +0700
+From: please-change-me-at-config-initializers-devise@example.com
+Reply-To: please-change-me-at-config-initializers-devise@example.com
+To: abcd@example.com
+Message-ID: <57b65429259f7_c3b11010fc44485@pinbang-Latitude-3540.mail>
+Subject: Confirmation instructions
+Mime-Version: 1.0
+Content-Type: text/html;
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+<p>Welcome abcd@example.com!</p>
+
+<p>You can confirm your account email through the link below:</p>
+
+<p><a href="http://localhost:3000/users/confirmation?confirmation_token=LjfJ88BjkoP-tRi2NBQ-">Confirm my account</a></p>
+
+Redirected to http://www.example.com/
+Completed 302 Found in 506ms (ActiveRecord: 111.3ms)
+Started GET "/" for 127.0.0.1 at 2016-08-19 07:34:49 +0700
+Processing by HomesController#index as HTML
+  Rendering homes/index.html.erb within layouts/application
+  [1m[36mAirport Load (0.6ms)[0m  [1m[34mSELECT "airports".* FROM "airports" WHERE (id IN (SELECT "routes"."ori_airport_id" FROM "routes")) ORDER BY "airports"."name_unsigned" ASC[0m
+  Rendered homes/index.html.erb within layouts/application (4.8ms)
+  Rendered shared/_toast.html.erb (0.7ms)
+  Rendered shared/_header.html.erb (1.8ms)
+Completed 200 OK in 33ms (Views: 11.9ms | ActiveRecord: 2.8ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at", "confirmed_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["email", "alindeman@example.com"], ["encrypted_password", "$2a$04$tNgYklfcvU3W0LLM3xF2KOqXCNYFsyMbE6zI5E/7Fwlv0FbDUatKK"], ["created_at", 2016-08-19 00:34:49 UTC], ["updated_at", 2016-08-19 00:34:49 UTC], ["confirmed_at", "2016-08-19 00:34:49 UTC"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started GET "/users/sign_in" for 127.0.0.1 at 2016-08-19 07:34:49 +0700
+Processing by Devise::SessionsController#new as HTML
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.5ms)
+  Rendered devise/sessions/new.html.erb within layouts/application (24.8ms)
+  Rendered shared/_toast.html.erb (0.3ms)
+  Rendered shared/_header.html.erb (0.9ms)
+Completed 200 OK in 44ms (Views: 42.8ms | ActiveRecord: 0.0ms)
+Started POST "/users/sign_in" for 127.0.0.1 at 2016-08-19 07:34:49 +0700
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"alindeman@example.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (0.6ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."email" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["email", "alindeman@example.com"], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (9.5ms)[0m  [1m[33mUPDATE "users" SET "current_sign_in_at" = $1, "last_sign_in_at" = $2, "current_sign_in_ip" = $3, "last_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["current_sign_in_at", 2016-08-19 00:34:49 UTC], ["last_sign_in_at", 2016-08-19 00:34:49 UTC], ["current_sign_in_ip", "127.0.0.1/32"], ["last_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", 2016-08-19 00:34:49 UTC], ["id", 19]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/
+Completed 302 Found in 54ms (ActiveRecord: 10.3ms)
+Started GET "/" for 127.0.0.1 at 2016-08-19 07:34:49 +0700
+Processing by HomesController#index as HTML
+  Rendering homes/index.html.erb within layouts/application
+  [1m[36mAirport Load (0.4ms)[0m  [1m[34mSELECT "airports".* FROM "airports" WHERE (id IN (SELECT "routes"."ori_airport_id" FROM "routes")) ORDER BY "airports"."name_unsigned" ASC[0m
+  Rendered homes/index.html.erb within layouts/application (2.2ms)
+  Rendered shared/_toast.html.erb (0.3ms)
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 19], ["LIMIT", 1]]
+  Rendered shared/_header.html.erb (1.9ms)
+Completed 200 OK in 9ms (Views: 7.3ms | ActiveRecord: 0.7ms)
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (23.8ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+Processing by FlightsController#index as HTML
+  Rendering flights/index.html.erb within layouts/application
+  Rendered flights/index.html.erb within layouts/application (0.4ms)
+Completed 200 OK in 67ms (Views: 7.7ms | ActiveRecord: 36.1ms)
+  [1m[35m (0.3ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+Started GET "/users/sign_up" for 127.0.0.1 at 2016-08-19 20:56:54 +0700
+Processing by Users::RegistrationsController#new as HTML
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.1ms)
+  Rendered devise/registrations/new.html.erb within layouts/application (23.2ms)
+  Rendered shared/_toast.html.erb (0.4ms)
+  Rendered shared/_header.html.erb (1.0ms)
+Completed 200 OK in 445ms (Views: 396.7ms | ActiveRecord: 9.7ms)
+Started POST "/users" for 127.0.0.1 at 2016-08-19 20:56:55 +0700
+Processing by Users::RegistrationsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"name"=>"abcdtesttest", "email"=>"abcd@example.com", "gender"=>"male", "phone"=>"0988034925", "password"=>"[FILTERED]"}, "commit"=>"Sign up"}
+  [1m[35m (0.2ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists (51.0ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "abcd@example.com"], ["LIMIT", 1]]
+  [1m[35mSQL (33.1ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at", "name", "phone", "gender", "confirmation_token", "confirmation_sent_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING "id"[0m  [["email", "abcd@example.com"], ["encrypted_password", "$2a$04$yWAGdWp.MiTYZxwPBII0b.kRER/GCpy97LSh4pZSDJe1QB9EWrsGy"], ["created_at", 2016-08-19 13:56:55 UTC], ["updated_at", 2016-08-19 13:56:55 UTC], ["name", "abcdtesttest"], ["phone", "0988034925"], ["gender", "male"], ["confirmation_token", "5ALsFaQd4QxB63zYnRKC"], ["confirmation_sent_at", 2016-08-19 13:56:55 UTC]]
+  [1m[35m (0.2ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  Rendering devise/mailer/confirmation_instructions.html.erb
+  Rendered devise/mailer/confirmation_instructions.html.erb (0.7ms)
+Devise::Mailer#confirmation_instructions: processed outbound mail in 118.6ms
+Sent mail to abcd@example.com (5.9ms)
+Date: Fri, 19 Aug 2016 20:56:55 +0700
+From: please-change-me-at-config-initializers-devise@example.com
+Reply-To: please-change-me-at-config-initializers-devise@example.com
+To: abcd@example.com
+Message-ID: <57b710275985c_16b5c050f899867@pinbang-Latitude-3540.mail>
+Subject: Confirmation instructions
+Mime-Version: 1.0
+Content-Type: text/html;
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+<p>Welcome abcd@example.com!</p>
+
+<p>You can confirm your account email through the link below:</p>
+
+<p><a href="http://localhost:3000/users/confirmation?confirmation_token=5ALsFaQd4QxB63zYnRKC">Confirm my account</a></p>
+
+Redirected to http://www.example.com/
+Completed 302 Found in 243ms (ActiveRecord: 84.6ms)
+Started GET "/" for 127.0.0.1 at 2016-08-19 20:56:55 +0700
+Processing by HomesController#index as HTML
+  Rendering homes/index.html.erb within layouts/application
+  [1m[36mAirport Load (0.6ms)[0m  [1m[34mSELECT "airports".* FROM "airports" WHERE (id IN (SELECT "routes"."ori_airport_id" FROM "routes")) ORDER BY "airports"."name_unsigned" ASC[0m
+  Rendered homes/index.html.erb within layouts/application (4.0ms)
+  Rendered shared/_toast.html.erb (0.4ms)
+  Rendered shared/_header.html.erb (1.1ms)
+Completed 200 OK in 13ms (Views: 8.3ms | ActiveRecord: 2.3ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at", "confirmed_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["email", "alindeman@example.com"], ["encrypted_password", "$2a$04$joinP.G8YgbUairELIjb5.mCfDWNwfbODNBwZdz.agNMTTDcRF7pm"], ["created_at", 2016-08-19 13:56:55 UTC], ["updated_at", 2016-08-19 13:56:55 UTC], ["confirmed_at", "2016-08-19 13:56:55 UTC"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started GET "/users/sign_in" for 127.0.0.1 at 2016-08-19 20:56:55 +0700
+Processing by Devise::SessionsController#new as HTML
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.2ms)
+  Rendered devise/sessions/new.html.erb within layouts/application (5.0ms)
+  Rendered shared/_toast.html.erb (0.4ms)
+  Rendered shared/_header.html.erb (1.0ms)
+Completed 200 OK in 13ms (Views: 11.2ms | ActiveRecord: 0.0ms)
+Started POST "/users/sign_in" for 127.0.0.1 at 2016-08-19 20:56:55 +0700
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"alindeman@example.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."email" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["email", "alindeman@example.com"], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (11.3ms)[0m  [1m[33mUPDATE "users" SET "current_sign_in_at" = $1, "last_sign_in_at" = $2, "current_sign_in_ip" = $3, "last_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["current_sign_in_at", 2016-08-19 13:56:55 UTC], ["last_sign_in_at", 2016-08-19 13:56:55 UTC], ["current_sign_in_ip", "127.0.0.1/32"], ["last_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", 2016-08-19 13:56:55 UTC], ["id", 21]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/
+Completed 302 Found in 27ms (ActiveRecord: 12.1ms)
+Started GET "/" for 127.0.0.1 at 2016-08-19 20:56:55 +0700
+Processing by HomesController#index as HTML
+  Rendering homes/index.html.erb within layouts/application
+  [1m[36mAirport Load (0.4ms)[0m  [1m[34mSELECT "airports".* FROM "airports" WHERE (id IN (SELECT "routes"."ori_airport_id" FROM "routes")) ORDER BY "airports"."name_unsigned" ASC[0m
+  Rendered homes/index.html.erb within layouts/application (2.2ms)
+  Rendered shared/_toast.html.erb (0.4ms)
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 21], ["LIMIT", 1]]
+  Rendered shared/_header.html.erb (2.0ms)
+Completed 200 OK in 10ms (Views: 7.6ms | ActiveRecord: 0.7ms)
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+Processing by FlightsController#index as HTML
+  Rendering flights/index.html.erb within layouts/application
+  Rendered flights/index.html.erb within layouts/application (0.3ms)
+Completed 200 OK in 19ms (Views: 7.2ms | ActiveRecord: 2.3ms)
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+Started GET "/users/sign_up" for 127.0.0.1 at 2016-08-19 21:44:50 +0700
+Processing by Users::RegistrationsController#new as HTML
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.2ms)
+  Rendered devise/registrations/new.html.erb within layouts/application (25.9ms)
+  Rendered shared/_toast.html.erb (0.4ms)
+  Rendered shared/_header.html.erb (1.0ms)
+Completed 200 OK in 433ms (Views: 392.0ms | ActiveRecord: 1.8ms)
+Started POST "/users" for 127.0.0.1 at 2016-08-19 21:44:51 +0700
+Processing by Users::RegistrationsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"name"=>"abcdtesttest", "email"=>"abcd@example.com", "gender"=>"male", "phone"=>"0988034925", "password"=>"[FILTERED]"}, "commit"=>"Sign up"}
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists (0.8ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "abcd@example.com"], ["LIMIT", 1]]
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at", "name", "phone", "gender", "confirmation_token", "confirmation_sent_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING "id"[0m  [["email", "abcd@example.com"], ["encrypted_password", "$2a$04$3iZXxhU4O0nSjJJkwijfz.YFzpo7TBc2ls2QseumsZvxUJ7rTXtw2"], ["created_at", 2016-08-19 14:44:51 UTC], ["updated_at", 2016-08-19 14:44:51 UTC], ["name", "abcdtesttest"], ["phone", "0988034925"], ["gender", "male"], ["confirmation_token", "McQazU9NboJaXF5JnMxn"], ["confirmation_sent_at", 2016-08-19 14:44:51 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  Rendering devise/mailer/confirmation_instructions.html.erb
+  Rendered devise/mailer/confirmation_instructions.html.erb (0.8ms)
+Devise::Mailer#confirmation_instructions: processed outbound mail in 125.3ms
+Sent mail to abcd@example.com (6.3ms)
+Date: Fri, 19 Aug 2016 21:44:51 +0700
+From: please-change-me-at-config-initializers-devise@example.com
+Reply-To: please-change-me-at-config-initializers-devise@example.com
+To: abcd@example.com
+Message-ID: <57b71b6348259_192caeb10483929@pinbang-Latitude-3540.mail>
+Subject: Confirmation instructions
+Mime-Version: 1.0
+Content-Type: text/html;
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+<p>Welcome abcd@example.com!</p>
+
+<p>You can confirm your account email through the link below:</p>
+
+<p><a href="http://localhost:3000/users/confirmation?confirmation_token=McQazU9NboJaXF5JnMxn">Confirm my account</a></p>
+
+Redirected to http://www.example.com/
+Completed 302 Found in 167ms (ActiveRecord: 1.4ms)
+Started GET "/" for 127.0.0.1 at 2016-08-19 21:44:51 +0700
+Processing by HomesController#index as HTML
+  Rendering homes/index.html.erb within layouts/application
+  [1m[36mAirport Load (0.8ms)[0m  [1m[34mSELECT "airports".* FROM "airports" WHERE (id IN (SELECT "routes"."ori_airport_id" FROM "routes")) ORDER BY "airports"."name_unsigned" ASC[0m
+  Rendered homes/index.html.erb within layouts/application (4.3ms)
+  Rendered shared/_toast.html.erb (0.9ms)
+  Rendered shared/_header.html.erb (1.2ms)
+Completed 200 OK in 14ms (Views: 9.4ms | ActiveRecord: 2.4ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at", "confirmed_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["email", "alindeman@example.com"], ["encrypted_password", "$2a$04$GMYLjnBu54e8R.IixKxctupfvlXdkhj90HZYXLNQSanVmUbcrqRl6"], ["created_at", 2016-08-19 14:44:51 UTC], ["updated_at", 2016-08-19 14:44:51 UTC], ["confirmed_at", "2016-08-19 14:44:51 UTC"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started GET "/users/sign_in" for 127.0.0.1 at 2016-08-19 21:44:51 +0700
+Processing by Devise::SessionsController#new as HTML
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.4ms)
+  Rendered devise/sessions/new.html.erb within layouts/application (5.0ms)
+  Rendered shared/_toast.html.erb (0.5ms)
+  Rendered shared/_header.html.erb (1.0ms)
+Completed 200 OK in 15ms (Views: 12.3ms | ActiveRecord: 0.0ms)
+Started POST "/users/sign_in" for 127.0.0.1 at 2016-08-19 21:44:51 +0700
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"alindeman@example.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."email" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["email", "alindeman@example.com"], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[33mUPDATE "users" SET "current_sign_in_at" = $1, "last_sign_in_at" = $2, "current_sign_in_ip" = $3, "last_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["current_sign_in_at", 2016-08-19 14:44:51 UTC], ["last_sign_in_at", 2016-08-19 14:44:51 UTC], ["current_sign_in_ip", "127.0.0.1/32"], ["last_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", 2016-08-19 14:44:51 UTC], ["id", 23]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/
+Completed 302 Found in 11ms (ActiveRecord: 1.1ms)
+Started GET "/" for 127.0.0.1 at 2016-08-19 21:44:51 +0700
+Processing by HomesController#index as HTML
+  Rendering homes/index.html.erb within layouts/application
+  [1m[36mAirport Load (0.3ms)[0m  [1m[34mSELECT "airports".* FROM "airports" WHERE (id IN (SELECT "routes"."ori_airport_id" FROM "routes")) ORDER BY "airports"."name_unsigned" ASC[0m
+  Rendered homes/index.html.erb within layouts/application (2.2ms)
+  Rendered shared/_toast.html.erb (0.5ms)
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 23], ["LIMIT", 1]]
+  Rendered shared/_header.html.erb (2.3ms)
+Completed 200 OK in 10ms (Views: 8.1ms | ActiveRecord: 0.7ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+Processing by FlightsController#index as HTML
+  Rendering flights/index.html.erb within layouts/application
+  Rendered flights/index.html.erb within layouts/application (0.3ms)
+Completed 200 OK in 17ms (Views: 5.2ms | ActiveRecord: 2.7ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+Started GET "/users/sign_up" for 127.0.0.1 at 2016-08-19 23:38:34 +0700
+Processing by Users::RegistrationsController#new as HTML
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.2ms)
+  Rendered devise/registrations/new.html.erb within layouts/application (22.6ms)
+  Rendered shared/_toast.html.erb (0.4ms)
+  Rendered shared/_header.html.erb (1.0ms)
+Completed 200 OK in 362ms (Views: 323.4ms | ActiveRecord: 1.6ms)
+Started POST "/users" for 127.0.0.1 at 2016-08-19 23:38:35 +0700
+Processing by Users::RegistrationsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"name"=>"abcdtesttest", "email"=>"abcd@example.com", "gender"=>"male", "phone"=>"0988034925", "password"=>"[FILTERED]"}, "commit"=>"Sign up"}
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists (0.8ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "abcd@example.com"], ["LIMIT", 1]]
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at", "name", "phone", "gender", "confirmation_token", "confirmation_sent_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING "id"[0m  [["email", "abcd@example.com"], ["encrypted_password", "$2a$04$4t7LEyVLKcHT7hpTdv5Oqek87wTOQieng4D8mMBbdSGX2WhCKi5Py"], ["created_at", 2016-08-19 16:38:35 UTC], ["updated_at", 2016-08-19 16:38:35 UTC], ["name", "abcdtesttest"], ["phone", "0988034925"], ["gender", "male"], ["confirmation_token", "MhfyzucRiecsFL1TViUB"], ["confirmation_sent_at", 2016-08-19 16:38:35 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  Rendering devise/mailer/confirmation_instructions.html.erb
+  Rendered devise/mailer/confirmation_instructions.html.erb (0.8ms)
+Devise::Mailer#confirmation_instructions: processed outbound mail in 265.6ms
+Sent mail to abcd@example.com (8.5ms)
+Date: Fri, 19 Aug 2016 23:38:35 +0700
+From: please-change-me-at-config-initializers-devise@example.com
+Reply-To: please-change-me-at-config-initializers-devise@example.com
+To: abcd@example.com
+Message-ID: <57b7360b66cd6_2459e110f4358d@pinbang-Latitude-3540.mail>
+Subject: Confirmation instructions
+Mime-Version: 1.0
+Content-Type: text/html;
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+<p>Welcome abcd@example.com!</p>
+
+<p>You can confirm your account email through the link below:</p>
+
+<p><a href="http://localhost:3000/users/confirmation?confirmation_token=MhfyzucRiecsFL1TViUB">Confirm my account</a></p>
+
+Redirected to http://www.example.com/
+Completed 302 Found in 318ms (ActiveRecord: 1.5ms)
+Started GET "/" for 127.0.0.1 at 2016-08-19 23:38:35 +0700
+Processing by HomesController#index as HTML
+  Rendering homes/index.html.erb within layouts/application
+  [1m[36mAirport Load (0.6ms)[0m  [1m[34mSELECT "airports".* FROM "airports" WHERE (id IN (SELECT "routes"."ori_airport_id" FROM "routes")) ORDER BY "airports"."name_unsigned" ASC[0m
+  Rendered homes/index.html.erb within layouts/application (5.5ms)
+  Rendered shared/_toast.html.erb (0.5ms)
+  Rendered shared/_header.html.erb (1.5ms)
+Completed 200 OK in 16ms (Views: 10.6ms | ActiveRecord: 2.5ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at", "confirmed_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["email", "alindeman@example.com"], ["encrypted_password", "$2a$04$8iu/5fNHKX1u6Ny1CYilbe3OaiORL3zLMxaPBq5fAqG1IE30eR1dC"], ["created_at", 2016-08-19 16:38:35 UTC], ["updated_at", 2016-08-19 16:38:35 UTC], ["confirmed_at", "2016-08-19 16:38:35 UTC"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started GET "/users/sign_in" for 127.0.0.1 at 2016-08-19 23:38:35 +0700
+Processing by Devise::SessionsController#new as HTML
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.7ms)
+  Rendered devise/sessions/new.html.erb within layouts/application (6.7ms)
+  Rendered shared/_toast.html.erb (0.7ms)
+  Rendered shared/_header.html.erb (1.6ms)
+Completed 200 OK in 18ms (Views: 16.0ms | ActiveRecord: 0.0ms)
+Started POST "/users/sign_in" for 127.0.0.1 at 2016-08-19 23:38:35 +0700
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"alindeman@example.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (0.6ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."email" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["email", "alindeman@example.com"], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[33mUPDATE "users" SET "current_sign_in_at" = $1, "last_sign_in_at" = $2, "current_sign_in_ip" = $3, "last_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["current_sign_in_at", 2016-08-19 16:38:35 UTC], ["last_sign_in_at", 2016-08-19 16:38:35 UTC], ["current_sign_in_ip", "127.0.0.1/32"], ["last_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", 2016-08-19 16:38:35 UTC], ["id", 25]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/
+Completed 302 Found in 15ms (ActiveRecord: 1.3ms)
+Started GET "/" for 127.0.0.1 at 2016-08-19 23:38:35 +0700
+Processing by HomesController#index as HTML
+  Rendering homes/index.html.erb within layouts/application
+  [1m[36mAirport Load (0.5ms)[0m  [1m[34mSELECT "airports".* FROM "airports" WHERE (id IN (SELECT "routes"."ori_airport_id" FROM "routes")) ORDER BY "airports"."name_unsigned" ASC[0m
+  Rendered homes/index.html.erb within layouts/application (3.4ms)
+  Rendered shared/_toast.html.erb (0.7ms)
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 25], ["LIMIT", 1]]
+  Rendered shared/_header.html.erb (2.6ms)
+Completed 200 OK in 14ms (Views: 11.1ms | ActiveRecord: 0.8ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (19.5ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+Processing by FlightsController#index as HTML
+  Rendering flights/index.html.erb within layouts/application
+  Rendered flights/index.html.erb within layouts/application (0.4ms)
+Completed 200 OK in 138ms (Views: 31.7ms | ActiveRecord: 79.7ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+Processing by FlightsController#index as HTML
+  Rendering flights/index.html.erb within layouts/application
+  Rendered flights/index.html.erb within layouts/application (0.3ms)
+Completed 200 OK in 17ms (Views: 5.6ms | ActiveRecord: 2.5ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (11.3ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (41.8ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1[0m  [["key", :environment]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1[0m  [["key", :environment]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1[0m  [["key", :environment]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT pg_try_advisory_lock(8712973059360538605);[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddProviderUidToUsers (20160827004233)
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (214.1ms)[0m  [1m[35mALTER TABLE "users" ADD "provider" character varying[0m
+  [1m[35m (0.3ms)[0m  [1m[35mALTER TABLE "users" ADD "uid" character varying[0m
+  [1m[35mSQL (38.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20160827004233"]]
+  [1m[35m (23.2ms)[0m  [1m[35mCOMMIT[0m
+Migrating to AddImageToUsers (20160827033919)
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.4ms)[0m  [1m[35mALTER TABLE "users" ADD "image" character varying[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20160827033919"]]
+  [1m[35m (14.8ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.4ms)[0m  [1m[34mSELECT  "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", :environment], ["LIMIT", 1]]
+  [1m[35m (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.7ms)[0m  [1m[33mUPDATE "ar_internal_metadata" SET "value" = $1, "updated_at" = $2 WHERE "ar_internal_metadata"."key" = $3[0m  [["value", "test"], ["updated_at", 2016-09-07 04:09:40 UTC], ["key", "environment"]]
+  [1m[35m (6.9ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT pg_advisory_unlock(8712973059360538605)[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (1.8ms)[0m  [1m[34mSELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'airports'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+[0m
+  [1m[35m (1.6ms)[0m  [1m[34mSELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'alerts'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+[0m
+  [1m[35m (1.7ms)[0m  [1m[34mSELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'crono_jobs'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+[0m
+  [1m[35m (1.7ms)[0m  [1m[34mSELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'flights'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+[0m
+  [1m[35m (1.7ms)[0m  [1m[34mSELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'orders'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+[0m
+  [1m[35m (1.7ms)[0m  [1m[34mSELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'passengers'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+[0m
+  [1m[35m (1.7ms)[0m  [1m[34mSELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'plane_categories'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+[0m
+  [1m[35m (1.7ms)[0m  [1m[34mSELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'routes'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+[0m
+  [1m[35m (1.7ms)[0m  [1m[34mSELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'search_histories'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+[0m
+  [1m[35m (1.7ms)[0m  [1m[34mSELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'users'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+Processing by FlightsController#index as HTML
+  Parameters: {"locale"=>"en"}
+  Rendering flights/index.html.erb within layouts/application
+  Rendered flights/index.html.erb within layouts/application (0.3ms)
+Completed 200 OK in 41ms (Views: 6.2ms | ActiveRecord: 2.9ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m

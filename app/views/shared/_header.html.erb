@@ -1,0 +1,37 @@
+<nav class="navbar navbar-light">
+  <div class="container">
+    <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2" aria-controls="exCollapsingNavbar2" aria-expanded="false" aria-label="Toggle navigation">
+      &#9776;
+    </button>
+    <div class="collapse navbar-toggleable-xs" id="exCollapsingNavbar2">
+      <%= link_to root_path, class: "navbar-brand iflight-logo" do %>
+        <%= image_tag "iflight-logo-250x62.png", width: '220', height: '50' %>
+      <% end %>
+      <ul class="nav navbar-nav navbar-right">
+        <% if user_signed_in? %>
+          <li class="nav-item">
+            <%= link_to "My Orders", orders_path, class: "nav-link" %>
+          </li>
+          <li class="dropdown nav-item">
+            <a href="#" id="drop1" data-toggle="dropdown" class="dropdown-toggle nav-link" role="button" aria-haspopup="true" aria-expanded="false">
+              <%= image_tag current_user.image_avatar, class: "img-avatar" %> 
+              <%= current_user.name %> <b class="caret"></b>
+            </a>
+            <ul role="menu" class="dropdown-menu dropdown-menu-right" aria-labelledby="drop1">
+              <li role="presentation">
+                <%= link_to('Logout', destroy_user_session_path, :method => :delete, class: "dropdown-item") %>    
+              </li>
+            </ul>
+          </li>
+        <% else %>
+          <li class="nav-item">
+            <%= link_to('Sign in', new_user_session_path, class: "nav-link")  %>  
+          </li>
+          <li class="nav-item">
+            <%= link_to('Sign up', new_user_registration_path, class: "nav-link")  %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,170 @@
+<div id="flights-result">
+  <input type="hidden" name="uuid" id="uuid" value="<%= @uuid %>" />
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="main-header text-center">
+        <h4 class="title">Booking Process</h4>
+        <div class="alert-icon">
+          <%= link_to nil, "data-toggle" => "modal", "data-target" => "#alert_price", "id"=> "alert-btn"  do %>
+            <i class="fa fa-bell-o animated flash" aria-hidden="true"></i>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <%= render partial: "alert", :locals => {alert: @alert, ori_airport: @ori_airport, des_airport: @des_airport, is_round_trip: @is_round_trip, date_depart: @date_depart, date_return: @date_return} %>
+  <div class="container">
+    <div class="row flights-result-header stepwizard">
+      <div class="stepwizard-row setup-panel">
+        <div class="stepwizard-step">
+          <a href="#step-1" class="btn current btn-circle">1</a>
+          <p>Departure</p>
+        </div>
+        <% if @is_round_trip %>
+          <div class="stepwizard-step">
+            <a href="#step-<%= @step_number %>" class="btn btn-secondary btn-circle" disabled="disabled"><%= @step_number %></a>
+            <p>Return</p>
+          </div>
+          <% @step_number += 1 %>
+        <% end %>
+        <div class="stepwizard-step">
+          <a href="#step-<%= @step_number %>" class="btn btn-secondary btn-circle" disabled="disabled"><%= @step_number %></a>
+          <p>Passengers</p>
+        </div>
+        <% @step_number += 1 %>
+        <div class="stepwizard-step">
+          <a href="#step-<%= @step_number %>" class="btn btn-secondary btn-circle" disabled="disabled"><%= @step_number %></a>
+          <p>Summary</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <%= form_for @order do |f| %>
+    <%= f.hidden_field :category, value: f.object.category %>
+    <%= f.hidden_field :ori_airport_id, value: @ori_airport.id %>
+    <%= f.hidden_field :des_airport_id, value: @des_airport.id %>
+    <%= f.hidden_field :date_depart, value: @date_depart %>
+    <%= f.hidden_field :date_return, value: @date_return %>
+    <%= f.hidden_field :adult, value: @adult %>
+    <%= f.hidden_field :child, value: @child %>
+    <%= f.hidden_field :infant, value: @infant %>
+    <%= f.hidden_field :price_total, value: "" %>
+
+    <%= f.fields_for :flights do |flight| %>
+      <%= flight.hidden_field :category, value: flight.object.category %>
+      <%= flight.hidden_field :plane_category_id, value: "" %>
+      <%= flight.hidden_field :code_flight, value: "" %>
+      <%= flight.hidden_field :time_depart, value: "" %>
+      <%= flight.hidden_field :time_arrive, value: "" %>
+      <%= flight.hidden_field :price_web, value: "" %>
+      <%= flight.hidden_field :price_total, value: "" %>
+    <% end %>
+
+    <div class="flights-result-wrapper">
+      <div class="container">
+        <div id="step-1" class="setup-content">
+          <div id="loading-section" class="text-center">
+            <div class="row">
+              <div class="col-xs-12">
+                <%= image_tag "loading/flightloader.gif", width: '485', height: '215' %>
+              </div>
+            </div>
+          </div>
+          <div id="try-again-section" class="text-center" style="display: none;">
+            <div class="row">
+              <div class="col-xs-12 col-sm-center">
+                Sorry, we can't find any ticket at the moment.
+              </div>
+              <div class="col-xs-12 col-sm-center">
+                <a href="" class="btn btn-primary">Try searching again</a>
+              </div>
+            </div>
+          </div>
+          <div id="depart-flights-content" style="display: none;">
+            <div class="step-title">
+              <div class="row">
+                <div class="col-xs-12">
+                  <h4>Select Departure</h4>
+                  <div class="round-type"><%= @ori_airport.code %> <i class="fa fa-plane" aria-hidden="true"></i> <%= @des_airport.code %>, <%= @date_depart %></div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="price-info-bar">
+                  Pricing is include ticket price and all taxes for one passenger
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="sort-by">
+                  Sort by:
+                  <select id="sort-depart">
+                    <option value="price-asc">Price (low to high)</option>
+                    <option value="price-desc">Price (high to low)</option>
+                    <option value="time-asc">Depart time (early to late)</option>
+                    <option value="time-desc">Depart time (late to early)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div id="depature-flights"></div>
+          </div>
+        </div>
+      </div>
+      <% @step_number = 2 %>
+      <% if @is_round_trip %>
+        <div class="container">
+          <div id="step-<%= @step_number %>" class="setup-content">
+            <div class="step-title">
+              <div class="row">
+                <div class="col-xs-12">
+                  <h4>Select Return</h4>
+                  <div class="round-type"><%= @des_airport.code %> <i class="fa fa-plane" aria-hidden="true"></i> <%= @ori_airport.code %>, <%= @date_return %></div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="price-info-bar">
+                  Pricing is include ticket price and all taxes for one passenger
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="sort-by">
+                  Sort by:
+                  <select id="sort-return">
+                    <option value="price-asc">Price (low to high)</option>
+                    <option value="price-desc">Price (high to low)</option>
+                    <option value="time-asc">Depart time (early to late)</option>
+                    <option value="time-desc">Depart time (late to early)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div id="return-flights"></div>
+            <div class="row">
+              <div class="col-xs-8 offset-xs-2" style="text-align: center;">
+                <a href="#" class="btn btn-lg btn-secondary back">Back</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <% @step_number += 1 %>
+      <% end %>
+      <div class="container">
+        <div id="step-<%= @step_number %>" class="setup-content">
+          <%= render partial: 'passenger_info', locals: {f: f} %>
+        </div>
+      </div>
+      <% @step_number += 1 %>
+      <div class="container">
+        <div id="step-<%= @step_number %>" class="setup-content">
+          <%= render 'summary' %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+<%= render 'flight_details_template' %>
+<%= render 'summary_flight_template' %>
+<%= render 'sharing_flight' %>

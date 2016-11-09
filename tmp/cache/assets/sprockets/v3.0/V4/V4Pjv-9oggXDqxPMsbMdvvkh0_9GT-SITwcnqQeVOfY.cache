@@ -1,0 +1,9 @@
+I"å(function() {
+  $(document).on("turbolinks:load", function() {
+    return App.random_number_in_range = function(minNumber, maxNumber) {
+      return Math.floor(Math.random() * maxNumber) + minNumber;
+    };
+  });
+
+}).call(this);
+:ET
